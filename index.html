@@ -69,12 +69,12 @@
       <span class="hdr__brand">Новый год<br><b>2027</b></span>
     </a>
     <nav class="hdr__nav" id="nav" aria-label="Разделы страницы">
+      <a href="#rooms">Номера</a>
       <a href="#tariffs">Тарифы</a>
       <a href="#program">Программа</a>
       <a href="#banquet">Банкет</a>
       <a href="#jan1">1 января</a>
       <a href="#active">Отдых</a>
-      <a href="#rooms">Номера</a>
       <a href="#terms">Условия</a>
       <a href="#afisha">Афиша</a>
       <a class="hdr__nav-phone" href="tel:+73519151520"><svg><use href="#i-phone"/></svg>+7 (351) 915-15-20</a>
@@ -111,6 +111,58 @@
     <a class="hero__promo" href="#early">
       <b>−10%</b><span>на тариф с банкетом<br>при раннем бронировании</span><svg><use href="#i-arrow"/></svg>
     </a>
+  </div>
+</section>
+
+<!-- ============ 4.8 НОМЕРА ============ -->
+<section class="sec sec--paper" id="rooms">
+  <div class="wrap">
+    <div class="sec__head sec__head--split">
+      <div>
+        <p class="eyebrow"><img src="img/mark-color.png" alt="" width="22" height="16">Номера и&nbsp;размещение</p>
+        <h2 class="h2">Номер для пары, семьи <em>или большой компании</em></h2>
+      </div>
+      <div class="carousel__nav">
+        <button class="round" type="button" data-car="prev" aria-label="Предыдущие номера"><svg><use href="#i-left"/></svg></button>
+        <button class="round" type="button" data-car="next" aria-label="Следующие номера"><svg><use href="#i-right"/></svg></button>
+      </div>
+    </div>
+    <p class="todo todo--block" data-note>В рабочей версии список, фото, вместимость и&nbsp;площадь подтягиваются из&nbsp;TravelLine. Цены не&nbsp;выводим — только кнопка перехода к&nbsp;выбору номера.</p>
+    <div class="carousel" id="roomsCarousel" tabindex="0" aria-label="Карусель номеров">
+      <ul class="carousel__track">
+        <li class="room">
+          <img src="img/rooms/studio.jpg" alt="Студия" loading="lazy">
+          <div class="room__body"><h3>Студия</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>2–4 гостя</span><span><svg><use href="#i-area"/></svg>29 м²</span></p>
+          <a class="btn btn--pine btn--block" data-book="room:studio" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
+        </li>
+        <li class="room">
+          <img src="img/rooms/standard-family.jpg" alt="Стандартный семейный номер" loading="lazy">
+          <div class="room__body"><h3>Стандартный семейный</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>2–3 гостя</span><span><svg><use href="#i-area"/></svg>29 м²</span></p>
+          <a class="btn btn--pine btn--block" data-book="room:standard-family" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
+        </li>
+        <li class="room">
+          <img src="img/rooms/standard-two-rooms.jpg" alt="Стандартный двухкомнатный номер" loading="lazy">
+          <div class="room__body"><h3>Стандартный двухкомнатный</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>2–4 гостя</span><span><svg><use href="#i-area"/></svg>26 м²</span></p>
+          <a class="btn btn--pine btn--block" data-book="room:standard-two-rooms" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
+        </li>
+        <li class="room">
+          <img src="img/rooms/family-lux.jpg" alt="Семейный люкс" loading="lazy">
+          <div class="room__body"><h3>Семейный люкс</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>2–6 гостей</span><span><svg><use href="#i-area"/></svg>38 м²</span></p>
+          <a class="btn btn--pine btn--block" data-book="room:family-lux" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
+        </li>
+        <li class="room">
+          <img src="img/rooms/apartment-2br.jpg" alt="Семейный апартамент с 2 спальнями" loading="lazy">
+          <div class="room__body"><h3>Апартамент с&nbsp;2&nbsp;спальнями</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>4–6 гостей</span><span><svg><use href="#i-area"/></svg>64 м²</span></p>
+          <a class="btn btn--pine btn--block" data-book="room:apartment-2br" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
+        </li>
+        <li class="room">
+          <img src="img/rooms/apartment-3br.jpg" alt="Семейный апартамент с 3 спальнями" loading="lazy">
+          <div class="room__body"><h3>Апартамент с&nbsp;3&nbsp;спальнями</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>6–9 гостей</span><span><svg><use href="#i-area"/></svg>64 м²</span></p>
+          <a class="btn btn--pine btn--block" data-book="room:apartment-3br" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
+        </li>
+      </ul>
+    </div>
+    <div class="carousel__dots" id="roomsDots" aria-hidden="true"></div>
   </div>
 </section>
 
@@ -343,60 +395,8 @@
   </div>
 </section>
 
-<!-- ============ 4.8 НОМЕРА ============ -->
-<section class="sec sec--snow" id="rooms">
-  <div class="wrap">
-    <div class="sec__head sec__head--split">
-      <div>
-        <p class="eyebrow"><img src="img/mark-color.png" alt="" width="22" height="16">Номера и&nbsp;размещение</p>
-        <h2 class="h2">Номер для пары, семьи <em>или большой компании</em></h2>
-      </div>
-      <div class="carousel__nav">
-        <button class="round" type="button" data-car="prev" aria-label="Предыдущие номера"><svg><use href="#i-left"/></svg></button>
-        <button class="round" type="button" data-car="next" aria-label="Следующие номера"><svg><use href="#i-right"/></svg></button>
-      </div>
-    </div>
-    <p class="todo todo--block" data-note>В рабочей версии список, фото, вместимость и&nbsp;площадь подтягиваются из&nbsp;TravelLine. Цены не&nbsp;выводим — только кнопка перехода к&nbsp;выбору номера.</p>
-    <div class="carousel" id="roomsCarousel" tabindex="0" aria-label="Карусель номеров">
-      <ul class="carousel__track">
-        <li class="room">
-          <img src="img/rooms/studio.jpg" alt="Студия" loading="lazy">
-          <div class="room__body"><h3>Студия</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>2–4 гостя</span><span><svg><use href="#i-area"/></svg>29 м²</span></p>
-          <a class="btn btn--pine btn--block" data-book="room:studio" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
-        </li>
-        <li class="room">
-          <img src="img/rooms/standard-family.jpg" alt="Стандартный семейный номер" loading="lazy">
-          <div class="room__body"><h3>Стандартный семейный</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>2–3 гостя</span><span><svg><use href="#i-area"/></svg>29 м²</span></p>
-          <a class="btn btn--pine btn--block" data-book="room:standard-family" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
-        </li>
-        <li class="room">
-          <img src="img/rooms/standard-two-rooms.jpg" alt="Стандартный двухкомнатный номер" loading="lazy">
-          <div class="room__body"><h3>Стандартный двухкомнатный</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>2–4 гостя</span><span><svg><use href="#i-area"/></svg>26 м²</span></p>
-          <a class="btn btn--pine btn--block" data-book="room:standard-two-rooms" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
-        </li>
-        <li class="room">
-          <img src="img/rooms/family-lux.jpg" alt="Семейный люкс" loading="lazy">
-          <div class="room__body"><h3>Семейный люкс</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>2–6 гостей</span><span><svg><use href="#i-area"/></svg>38 м²</span></p>
-          <a class="btn btn--pine btn--block" data-book="room:family-lux" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
-        </li>
-        <li class="room">
-          <img src="img/rooms/apartment-2br.jpg" alt="Семейный апартамент с 2 спальнями" loading="lazy">
-          <div class="room__body"><h3>Апартамент с&nbsp;2&nbsp;спальнями</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>4–6 гостей</span><span><svg><use href="#i-area"/></svg>64 м²</span></p>
-          <a class="btn btn--pine btn--block" data-book="room:apartment-2br" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
-        </li>
-        <li class="room">
-          <img src="img/rooms/apartment-3br.jpg" alt="Семейный апартамент с 3 спальнями" loading="lazy">
-          <div class="room__body"><h3>Апартамент с&nbsp;3&nbsp;спальнями</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>6–9 гостей</span><span><svg><use href="#i-area"/></svg>64 м²</span></p>
-          <a class="btn btn--pine btn--block" data-book="room:apartment-3br" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
-        </li>
-      </ul>
-    </div>
-    <div class="carousel__dots" id="roomsDots" aria-hidden="true"></div>
-  </div>
-</section>
-
 <!-- ============ 4.9 УСЛОВИЯ ============ -->
-<section class="sec sec--paper" id="terms">
+<section class="sec sec--snow" id="terms">
   <div class="wrap terms">
     <div class="terms__head">
       <p class="eyebrow"><img src="img/mark-color.png" alt="" width="22" height="16">Перед бронированием</p>
