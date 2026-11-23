@@ -377,12 +377,12 @@
     var m = document.getElementById('room-modal');
     if (!m) return;
     var $ = function (id) { return document.getElementById(id); };
-    var photo = $('rmPhoto'), thumbs = $('rmThumbs'), count = $('rmCount');
+    var bg = $('rmBg'), photo = $('rmPhoto'), thumbs = $('rmThumbs'), count = $('rmCount');
     var cur = { slug: null, i: 0, name: '' };
 
     function show(i) {
       cur.i = (i + ROOM_PHOTOS) % ROOM_PHOTOS;
-      photo.src = 'img/rooms/' + cur.slug + '-' + (cur.i + 1) + '.webp';
+      photo.src = bg.src = 'img/rooms/' + cur.slug + '-' + (cur.i + 1) + '.webp';
       photo.alt = cur.name + ', фото ' + (cur.i + 1) + ' из ' + ROOM_PHOTOS;
       count.textContent = (cur.i + 1) + ' / ' + ROOM_PHOTOS;
       thumbs.querySelectorAll('button').forEach(function (b, k) {

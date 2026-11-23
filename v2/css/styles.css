@@ -249,9 +249,11 @@ svg{width:1em;height:1em;flex:none}
 .carousel::-webkit-scrollbar{display:none}
 .carousel__track{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 40px)/3.25);column-gap:20px}
 .room{scroll-snap-align:start;background:var(--bg);border-radius:var(--r-lg);padding:10px;display:flex;flex-direction:column}
-.room__img{aspect-ratio:4/3;border-radius:20px;overflow:hidden;display:block;width:100%;padding:0;border:0;background:var(--line);cursor:zoom-in}
-.room__img img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
-.room:hover .room__img img{transform:scale(1.04)}
+.room__img{position:relative;aspect-ratio:4/3;border-radius:20px;overflow:hidden;display:block;width:100%;padding:0;border:0;background:var(--ink);cursor:zoom-in;isolation:isolate}
+.room__img img{position:relative;width:100%;height:100%;object-fit:contain}
+/* фото целиком, поля — размытая копия того же фото */
+.room__img .room__bg,.rm__bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(22px) saturate(1.1) brightness(.82);transform:scale(1.18);transition:transform .6s var(--ease)}
+.room:hover .room__img .room__bg{transform:scale(1.28)}
 .room__body{padding:18px 12px 12px;display:flex;flex-direction:column;gap:12px;flex:1}
 .room__body h3{font-weight:800;font-size:21px;letter-spacing:-.025em;line-height:1.15}
 .room__meta{display:flex;gap:18px;font-size:14px;color:var(--ink-3);flex:1}
@@ -374,7 +376,9 @@ svg{width:1em;height:1em;flex:none}
 .rm .modal__close{z-index:3;background:var(--bg);border-color:var(--bg);box-shadow:0 2px 10px rgba(18,18,18,.18)}
 .rm__gallery{background:var(--ink);display:flex;flex-direction:column;min-height:0}
 .rm__stage{position:relative;flex:1;min-height:0}
-.rm__photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rm__stage{overflow:hidden;isolation:isolate;background:var(--ink)}
+.rm__photo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.rm__nav,.rm__count{z-index:1}
 .rm__nav{position:absolute;top:50%;translate:0 -50%;width:48px;height:48px;border-radius:50%;border:0;background:var(--bg);color:var(--ink);display:grid;place-items:center;font-size:22px;transition:background-color .2s,color .2s}
 .rm__nav:hover{background:var(--blue);color:#fff}
 .rm__nav--prev{left:16px}.rm__nav--next{right:16px}
@@ -384,7 +388,13 @@ svg{width:1em;height:1em;flex:none}
 .rm__thumbs button:hover{opacity:.85}
 .rm__thumbs button[aria-current]{opacity:1;outline-color:var(--red)}
 .rm__thumbs img{width:100%;height:100%;object-fit:cover}
-.rm__info{padding:40px 40px 32px;overflow-y:auto;min-height:0;display:flex;flex-direction:column}
+.rm__info{padding:40px 40px 32px;overflow-y:auto;min-height:0;display:flex;flex-direction:column;overscroll-behavior:contain}
+/* кастомный скролл в окне номера */
+.rm__info::-webkit-scrollbar,.rm::-webkit-scrollbar{width:18px}
+.rm__info::-webkit-scrollbar-track,.rm::-webkit-scrollbar-track{margin:76px 0 28px;background:linear-gradient(var(--line),var(--line)) center/2px 100% no-repeat}
+.rm__info::-webkit-scrollbar-thumb,.rm::-webkit-scrollbar-thumb{background:var(--blue);border:5px solid transparent;border-radius:999px;background-clip:padding-box;min-height:56px}
+.rm__info::-webkit-scrollbar-thumb:hover,.rm::-webkit-scrollbar-thumb:hover{background-color:var(--red);border-width:4px}
+@supports (-moz-appearance:none){.rm__info,.rm{scrollbar-width:thin;scrollbar-color:var(--blue) transparent}}
 .rm__info .kicker{margin-bottom:12px;padding-right:48px}
 .rm__title{font-weight:900;font-size:clamp(28px,2.6vw,40px);line-height:1;letter-spacing:-.035em;color:var(--blue)}
 .rm__lead{margin-top:14px;font-size:17px;color:var(--ink-2)}
@@ -464,6 +474,9 @@ body.no-notes [data-note]{display:none}
 }
 @media (max-width:640px){
   .modal--room{padding:0;place-items:end stretch}
+  .rm::-webkit-scrollbar{width:6px}
+  .rm::-webkit-scrollbar-track{margin:0;background:none}
+  .rm::-webkit-scrollbar-thumb{border:0;min-height:40px}
   .rm{max-height:100dvh;height:100dvh;border-radius:0}
   .rm__stage{aspect-ratio:4/3}
   .rm__gallery{flex:none}
