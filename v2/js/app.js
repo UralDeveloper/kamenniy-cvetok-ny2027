@@ -62,6 +62,8 @@
     var params = {};
     var book = el.getAttribute('data-book');
     if (book) params.target = book;
+    var room = el.getAttribute('data-room');
+    if (room) params.room = room;
     reachGoal(el.getAttribute('data-goal'), params);
   });
 
@@ -270,12 +272,15 @@
 
   /* ===================== МОДАЛКА ===================== */
   var lastFocus = null;
+  function openModal(m, trigger) {
+    lastFocus = trigger || document.activeElement;
+    m.hidden = false; document.body.style.overflow = 'hidden';
+    var f = m.querySelector('[data-close]'); if (f) f.focus();
+  }
   document.querySelectorAll('[data-open]').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var m = document.getElementById(btn.getAttribute('data-open'));
-      if (!m) return;
-      lastFocus = btn; m.hidden = false; document.body.style.overflow = 'hidden';
-      var f = m.querySelector('[data-close]'); if (f) f.focus();
+      if (m) openModal(m, btn);
     });
   });
   function closeModal(m) { m.hidden = true; document.body.style.overflow = ''; if (lastFocus) lastFocus.focus(); }
@@ -283,10 +288,156 @@
     m.addEventListener('click', function (e) { if (e.target === m || e.target.closest('[data-close]')) closeModal(m); });
   });
   document.addEventListener('keydown', function (e) {
+    var open = document.querySelector('.modal:not([hidden])');
+    if (e.key === 'Tab' && open) { // фокус не уходит из открытого окна
+      var f = Array.prototype.filter.call(open.querySelectorAll('a[href],button:not([disabled])'), function (el) { return el.offsetParent !== null; });
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+      return;
+    }
     if (e.key !== 'Escape') return;
     document.querySelectorAll('.modal:not([hidden])').forEach(closeModal);
     if (hdr.classList.contains('is-open')) closeMenu();
   });
+
+  /* ===================== НОМЕРА: ПАРАМЕТРЫ ===================== */
+  // Источник — страницы kamenniy-cvetok.ru/rooms/<slug>/. В рабочей версии — из TravelLine/CMS.
+  var ROOMS = {
+    'studio': {
+      name: 'Студия', type: 'Однокомнатная студия', guests: '2–4', guestsWord: 'гостя', area: '29', floor: '4 этаж',
+      lead: 'Стильная и уютная студия на&nbsp;4&nbsp;этаже: хороший обзор и&nbsp;тишина.',
+      specs: [
+        ['Спальные места', 'Двуспальная кровать и&nbsp;небольшой диван — раскладывается в&nbsp;дополнительное место для 1&nbsp;гостя.'],
+        ['Кухня', 'Холодильник, микроволновая печь, варочная поверхность, чайник, посуда для готовки, столовая посуда и&nbsp;приборы. Обеденный стол на&nbsp;3&nbsp;гостей.'],
+        ['В номере', 'Телевизор, кондиционер.'],
+        ['Ванная', 'Душевая кабина, фен.'],
+        ['Расположение', '4&nbsp;этаж. В&nbsp;корпусе нет лифта.']
+      ]
+    },
+    'standard-family': {
+      name: 'Стандартный семейный номер', type: 'Однокомнатный номер', guests: '2–3', guestsWord: 'гостя', area: '22', floor: '1 этаж',
+      lead: 'Уютный однокомнатный номер для пары или небольшой семьи.',
+      specs: [
+        ['Спальные места', 'Двуспальная кровать и&nbsp;диван — дополнительное спальное место.'],
+        ['Кухня', 'Мини-кухня: варочная панель, мини-холодильник, микроволновая печь, чайник, посуда для готовки, столовая посуда и&nbsp;приборы. Обеденная зона на&nbsp;3&nbsp;гостей.'],
+        ['В номере', 'Кондиционер.'],
+        ['Ванная', 'Душевая кабина, фен.'],
+        ['Расположение', '1&nbsp;этаж, окна выходят на&nbsp;парковку.']
+      ]
+    },
+    'standard-two-rooms': {
+      name: 'Стандартный двухкомнатный номер', type: 'Двухкомнатный номер', guests: '2–4', guestsWord: 'гостя', area: '26–29', floor: '1 этаж',
+      lead: 'Отдельная спальня и&nbsp;гостиная с&nbsp;кухней и&nbsp;обеденной зоной — для семьи или небольшой компании.',
+      specs: [
+        ['Спальные места', 'В&nbsp;спальне две односпальные кровати или одна двуспальная. В&nbsp;гостиной диван — дополнительное место для <span class="nw">1–2</span>&nbsp;гостей.'],
+        ['Кухня', 'Мини-холодильник, микроволновая печь, варочная поверхность, чайник, посуда для готовки, столовая посуда и&nbsp;приборы. Обеденный стол на&nbsp;4&nbsp;человек.'],
+        ['В номере', 'Телевизор, кондиционер, шкаф для одежды.'],
+        ['Ванная', 'Душевая кабина, фен.'],
+        ['Расположение', '1&nbsp;этаж — быстрый выход на&nbsp;территорию отеля.']
+      ]
+    },
+    'family-lux': {
+      name: 'Семейный люкс', type: 'Двухкомнатный номер', guests: '2–6', guestsWord: 'гостей', area: '38', floor: '2 этаж',
+      lead: 'Отдельная спальня для взрослых и&nbsp;большая гостиная с&nbsp;кухней, обеденной и&nbsp;спальной зонами.',
+      specs: [
+        ['Спальные места', 'В&nbsp;спальне большая двуспальная кровать. В&nbsp;гостиной две односпальные кровати и&nbsp;раскладной диван на&nbsp;<span class="nw">1–2</span>&nbsp;гостей. До&nbsp;4&nbsp;гостей на&nbsp;основных местах, с&nbsp;диваном — до&nbsp;6.'],
+        ['Кухня', 'Холодильник, микроволновая печь, варочная поверхность, духовой шкаф, электрический чайник, посуда для готовки и&nbsp;сервировки. Стол на&nbsp;6&nbsp;человек.'],
+        ['В номере', 'Телевизор в&nbsp;гостиной и&nbsp;в&nbsp;спальне, кондиционер.'],
+        ['Ванная', 'Душевая кабина, фен.'],
+        ['Расположение', '2&nbsp;этаж. В&nbsp;корпусе нет лифта.']
+      ]
+    },
+    'apartment-2br': {
+      name: 'Семейный апартамент с&nbsp;2&nbsp;спальнями', type: 'Трёхкомнатный апартамент', guests: '4–6', guestsWord: 'гостей', area: '64', floor: '4 этаж',
+      lead: 'Две отдельные спальни, светлая гостиная с&nbsp;обеденной зоной и&nbsp;полностью оборудованная кухня.',
+      specs: [
+        ['Спальные места', 'В&nbsp;каждой спальне двуспальная кровать. В&nbsp;гостиной диван — дополнительное место для <span class="nw">1–2</span>&nbsp;гостей.'],
+        ['Кухня', 'Холодильник, духовой шкаф, варочная панель, микроволновая печь, чайник, посуда для готовки, столовая посуда и&nbsp;приборы. Обеденный стол на&nbsp;6&nbsp;человек.'],
+        ['В номере', 'Телевизор, кондиционеры в&nbsp;гостиной и&nbsp;спальнях, шкафы для одежды, прихожая с&nbsp;вместительным шкафом.'],
+        ['Ванная', 'Душевая кабина, фен.'],
+        ['Расположение', '4&nbsp;этаж. В&nbsp;корпусе нет лифта.']
+      ]
+    },
+    'apartment-3br': {
+      name: 'Семейный апартамент с&nbsp;3&nbsp;спальнями', type: 'Апартамент с&nbsp;тремя спальнями', guests: '6–9', guestsWord: 'гостей', area: '64', floor: '2–3 этаж',
+      lead: 'Три отдельные спальни, большая гостиная с&nbsp;обеденной зоной и&nbsp;кухней — для большой семьи или компании.',
+      specs: [
+        ['Спальные места', 'В&nbsp;каждой спальне двуспальная кровать. Диван в&nbsp;гостиной и&nbsp;диван в&nbsp;одной из&nbsp;спален — дополнительные места для <span class="nw">1–2</span>&nbsp;гостей каждый.'],
+        ['Кухня', 'Холодильник, духовой шкаф, варочная панель, микроволновая печь, чайник, посуда для готовки и&nbsp;хранения еды, столовая посуда и&nbsp;приборы. Стол на&nbsp;6&nbsp;персон.'],
+        ['В номере', 'Телевизор, кондиционеры, шкафы для одежды, прихожая с&nbsp;вместительным шкафом.'],
+        ['Ванная', 'Душевая кабина, фен.'],
+        ['Расположение', '2 или 3&nbsp;этаж. В&nbsp;корпусе нет лифта.']
+      ]
+    }
+  };
+  var ROOM_PHOTOS = 4;
+
+  (function roomModal() {
+    var m = document.getElementById('room-modal');
+    if (!m) return;
+    var $ = function (id) { return document.getElementById(id); };
+    var photo = $('rmPhoto'), thumbs = $('rmThumbs'), count = $('rmCount');
+    var cur = { slug: null, i: 0, name: '' };
+
+    function show(i) {
+      cur.i = (i + ROOM_PHOTOS) % ROOM_PHOTOS;
+      photo.src = 'img/rooms/' + cur.slug + '-' + (cur.i + 1) + '.webp';
+      photo.alt = cur.name + ', фото ' + (cur.i + 1) + ' из ' + ROOM_PHOTOS;
+      count.textContent = (cur.i + 1) + ' / ' + ROOM_PHOTOS;
+      thumbs.querySelectorAll('button').forEach(function (b, k) {
+        if (k === cur.i) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
+      });
+    }
+
+    function open(slug, trigger) {
+      var r = ROOMS[slug]; if (!r) return;
+      var tmp = document.createElement('span'); tmp.innerHTML = r.name;
+      cur.slug = slug; cur.name = tmp.textContent;
+      $('rmType').innerHTML = r.type;
+      $('rmTitle').innerHTML = r.name;
+      $('rmLead').innerHTML = r.lead;
+      $('rmFacts').innerHTML =
+        '<li><b>' + r.guests + '</b><span>' + r.guestsWord + '</span></li>' +
+        '<li><b>' + r.area + '</b><span>м²</span></li>' +
+        '<li><b>' + r.floor.split(' ')[0] + '</b><span>этаж</span></li>';
+      $('rmSpecs').innerHTML = r.specs.map(function (s) { return '<div><dt>' + s[0] + '</dt><dd>' + s[1] + '</dd></div>'; }).join('');
+      var book = $('rmBook');
+      book.setAttribute('data-book', 'room:' + slug);
+      book.href = bookingUrl('room:' + slug);
+      var t = '';
+      for (var k = 1; k <= ROOM_PHOTOS; k++) {
+        t += '<button type="button" data-rm-i="' + (k - 1) + '" aria-label="Фото ' + k + '"><img src="img/rooms/' + slug + '-' + k + '.webp" alt=""></button>';
+      }
+      thumbs.innerHTML = t;
+      show(0);
+      m.querySelector('.rm__info').scrollTop = 0;
+      openModal(m, trigger);
+    }
+
+    document.querySelectorAll('[data-room]').forEach(function (b) {
+      b.addEventListener('click', function () { open(b.getAttribute('data-room'), b); });
+    });
+    m.addEventListener('click', function (e) {
+      var nav = e.target.closest('[data-rm]');
+      if (nav) { show(cur.i + (nav.getAttribute('data-rm') === 'next' ? 1 : -1)); return; }
+      var th = e.target.closest('[data-rm-i]');
+      if (th) show(+th.getAttribute('data-rm-i'));
+    });
+    m.addEventListener('keydown', function (e) {
+      if (e.target.closest('.rm__gallery') && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+        e.preventDefault(); show(cur.i + (e.key === 'ArrowRight' ? 1 : -1));
+      }
+    });
+    // свайп по фото на телефоне
+    var x0 = null;
+    photo.parentNode.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    photo.parentNode.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 40) show(cur.i + (dx < 0 ? 1 : -1));
+    });
+  })();
 
   /* ===================== ПОМЕТКИ МАКЕТА ===================== */
   var nt = document.getElementById('notesToggle');
