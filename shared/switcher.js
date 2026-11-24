@@ -13,7 +13,8 @@
     { id: 'a', path: '',    name: 'Классика',       note: 'хвоя и золото',  native: ['#0f2a24', '#cfa957', '#f5f2eb'], brandMeta: '#3A1250' },
     { id: 'b', path: 'v2/', name: 'Постер',         note: 'синий и красный', native: ['#1E3FD0', '#EE4420', '#F3EEE6'], brandMeta: '#F7F5F8' },
     { id: 'c', path: 'v3/', name: 'Красная дверь',  note: 'дверь и латунь',  native: ['#8E0A20', '#162F3F', '#A28350'], brandMeta: '#3A1250' },
-    { id: 'd', path: 'v4/', name: 'Santa-стиль',    note: 'красный на белом', native: ['#C8272B', '#FFFFFF', '#141010'], brandMeta: '#D11E46' }
+    { id: 'd', path: 'v4/', name: 'Santa-стиль',    note: 'красный на белом', native: ['#C8272B', '#FFFFFF', '#141010'], brandMeta: '#D11E46' },
+    { id: 'e', path: 'v5/', name: 'Кристалл',       note: 'грани и самоцветы', native: ['#D11E46', '#3A1250', '#0164E5', '#00BA88'], brandMeta: '#2A0D3B', brandOnly: true }
   ];
   var BRAND = ['#D11E46', '#3A1250', '#0164E5', '#00BA88'];
 
@@ -36,7 +37,7 @@
     var m = document.querySelector('meta[name="theme-color"]');
     if (!m) return;
     if (metaNative === null) metaNative = m.getAttribute('content');
-    m.setAttribute('content', theme === 'brand' ? current.brandMeta : metaNative);
+    m.setAttribute('content', theme === 'brand' && !current.brandOnly ? current.brandMeta : metaNative);
   }
 
   function href(l) {
@@ -59,6 +60,7 @@
     '.ny27sw__panel[hidden]{display:none}' +
     '.ny27sw__h{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#c9c3d1;margin:0 0 8px 4px}' +
     '.ny27sw__h:not(:first-child){margin-top:16px}' +
+    '.ny27sw__note{margin:0 4px;font-size:13px;color:#c9c3d1}' +
     '.ny27sw__list{display:grid;gap:4px;list-style:none;padding:0}' +
     '.ny27sw__opt{display:flex;align-items:center;gap:12px;width:100%;padding:9px 10px;border:0;border-radius:12px;background:transparent;text-align:left;text-decoration:none;cursor:pointer}' +
     '.ny27sw__opt:hover{background:rgba(255,255,255,.08)}' +
@@ -95,10 +97,10 @@
           return '<li><a class="ny27sw__opt" data-layout="' + l.id + '" href="' + href(l) + '"' + (l === current ? ' aria-current="page"' : '') + '>' +
             '<span class="ny27sw__k">' + l.id.toUpperCase() + '</span><span class="ny27sw__t"><b>' + l.name + '</b><small>' + l.note + '</small></span>' + CHECK + '</a></li>';
         }).join('') + '</ul>' +
-        '<p class="ny27sw__h">Цвета</p><ul class="ny27sw__list">' +
+        '<p class="ny27sw__h">Цвета</p>' + (current.brandOnly ? '<p class="ny27sw__note">Этот макет сразу в фирменных цветах логотипа</p>' : '<ul class="ny27sw__list">' +
           '<li><button class="ny27sw__opt" type="button" data-theme-set="native" aria-pressed="false">' + dots(current.native) + '<span class="ny27sw__t"><b>Родные</b><small>палитра макета</small></span>' + CHECK + '</button></li>' +
           '<li><button class="ny27sw__opt" type="button" data-theme-set="brand" aria-pressed="false">' + dots(BRAND) + '<span class="ny27sw__t"><b>Фирменные</b><small>цвета логотипа</small></span>' + CHECK + '</button></li>' +
-        '</ul></div>' +
+        '</ul>') + '</div>' +
       '<button class="ny27sw__btn" type="button" aria-expanded="false" aria-controls="ny27swPanel" aria-label="Макет и цвета">' +
         '<span class="ny27sw__dots" aria-hidden="true"></span><b>Макет ' + current.id.toUpperCase() + '</b><span class="ny27sw__lbl"></span></button>';
     document.body.appendChild(w);
@@ -109,9 +111,10 @@
     var lbl = w.querySelector('.ny27sw__lbl');
 
     function sync() {
-      var c = theme === 'brand' ? BRAND : current.native.concat(['#ffffff']).slice(0, 4);
+      var brandish = theme === 'brand' || current.brandOnly;
+      var c = brandish ? BRAND : current.native.concat(['#ffffff']).slice(0, 4);
       dotBox.innerHTML = c.map(function (x) { return '<i style="background:' + x + ';box-shadow:0 0 0 1px rgba(0,0,0,.18) inset"></i>'; }).join('');
-      lbl.textContent = '· ' + (theme === 'brand' ? 'фирменные' : 'родные');
+      lbl.textContent = '· ' + (brandish ? 'фирменные' : 'родные');
       Array.prototype.forEach.call(w.querySelectorAll('[data-theme-set]'), function (b) { b.setAttribute('aria-pressed', String(b.dataset.themeSet === theme)); });
       Array.prototype.forEach.call(w.querySelectorAll('[data-layout]'), function (a) {
         LAYOUTS.forEach(function (l) { if (l.id === a.dataset.layout) a.href = href(l); });
