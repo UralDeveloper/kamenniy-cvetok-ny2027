@@ -614,6 +614,31 @@ body.no-notes [data-note]{display:none!important}
   .hero--banner .hero__actions{flex-direction:column;width:100%;flex-wrap:wrap}
   .hero--banner .hero__promo{width:100%}
 }
+
+/* Большой первый экран: фото на всю ширину, под прозрачной шапкой */
+.hero--banner{padding-top:0}
+.hero--banner .hero__poster{width:100%;margin:0;border-radius:0;box-shadow:none;height:clamp(560px,min(100svh - 120px,48vw),940px)}
+.hero--banner .hero__poster picture,.hero--banner .hero__poster img{display:block;width:100%;height:100%}
+.hero--banner .hero__poster img{object-fit:cover;object-position:100% 50%}
+.hero--banner .hero__poster::after{background:linear-gradient(180deg,rgba(8,18,31,.55) 0%,rgba(8,18,31,0) 22%),linear-gradient(90deg,rgba(8,18,31,.8) 0%,rgba(8,18,31,.5) 28%,rgba(8,18,31,0) 46%),linear-gradient(0deg,rgba(8,18,31,.6) 0%,rgba(8,18,31,0) 40%)}
+.hero--banner .hero__over{left:clamp(24px,5vw,96px);bottom:clamp(40px,5.5vw,96px);max-width:min(600px,38vw)}
+.hero--banner .hero__title{font-size:clamp(44px,4.6vw,84px)}
+.hero--banner .hero__dates{font-size:14px;padding:8px 14px}
+@media (max-width:1024px){
+  .hero--banner .hero__poster{height:clamp(480px,min(100svh - 150px,80vw),760px)}
+  .hero--banner .hero__poster::after{background:linear-gradient(180deg,rgba(8,18,31,.55) 0%,rgba(8,18,31,0) 22%),linear-gradient(0deg,rgba(8,18,31,.9) 0%,rgba(8,18,31,.55) 38%,rgba(8,18,31,0) 62%)}
+  .hero--banner .hero__over{right:24px;max-width:640px}
+}
+@media (max-width:640px){ /* телефон: вся семья в кадре, текст под фото */
+  .hero--banner{padding-top:0}
+  .hero--banner .hero__poster{width:100%;border-radius:0;height:auto;overflow:visible;background:none}
+  .hero--banner .hero__poster picture{position:relative;height:auto;padding-top:calc(var(--hdr) - 16px);background:linear-gradient(180deg,#1b2347,#202a52)}
+  .hero--banner .hero__poster img{height:auto;aspect-ratio:1073/744;object-position:50% 50%}
+  .hero--banner .hero__poster::after{display:none}
+  .hero--banner .hero__poster picture::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(27,35,71,1) 0%,rgba(27,35,71,0) calc(var(--hdr) + 40px)),linear-gradient(0deg,var(--night-900) 0%,rgba(8,18,31,0) 30%)}
+  .hero--banner .hero__over{position:relative;left:auto;right:auto;bottom:auto;max-width:none;padding:6px 18px 0;margin-top:-28px}
+  .hero--banner .hero__title{font-size:44px}
+}
 @media (prefers-reduced-motion:reduce){.hero__poster img{animation:none}}
 .ftr__bottom .ftr__legal{flex-basis:100%;order:3;line-height:1.6}
 
