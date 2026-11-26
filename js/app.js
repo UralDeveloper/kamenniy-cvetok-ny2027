@@ -327,7 +327,7 @@
   document.addEventListener('keydown', function (e) {
     var open = document.querySelector('.modal:not([hidden])');
     if (e.key === 'Tab' && open) { // фокус не уходит из открытого окна
-      var f = Array.prototype.filter.call(open.querySelectorAll('a[href],button:not([disabled])'), function (el) { return el.offsetParent !== null; });
+      var f = Array.prototype.filter.call(open.querySelectorAll('a[href],button:not([disabled]),input,select,textarea'), function (el) { return el.offsetParent !== null; });
       if (!f.length) return;
       if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
       else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
@@ -337,6 +337,90 @@
     document.querySelectorAll('.modal:not([hidden])').forEach(closeModal);
     if (hdr.classList.contains('is-open')) closeMenu();
   });
+
+  /* ===================== ЗАЯВКА СО СКИДКОЙ ===================== */
+  (function () {
+    var m = document.getElementById('lead-modal'), form = document.getElementById('leadForm');
+    if (!m || !form) return;
+    var ok = document.getElementById('leadOk'), err = document.getElementById('leadErr');
+    var fName = form.elements.namedItem('name'); // form.name — это атрибут формы, не поле
+    document.querySelectorAll('[data-open="lead-modal"]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        form.hidden = false; ok.hidden = true; err.hidden = true;
+        if (b.getAttribute('data-lead')) form.tariff.value = b.getAttribute('data-lead');
+        setTimeout(function () { fName.focus(); }, 30);
+      });
+    });
+    form.phone.addEventListener('input', function () { // +7 (XXX) XXX-XX-XX
+      var d = this.value.replace(/\D/g, '');
+      if (d[0] === '8' || d[0] === '7') d = d.slice(1);
+      d = d.slice(0, 10);
+      var r = '+7';
+      if (d.length) r += ' (' + d.slice(0, 3);
+      if (d.length >= 3) r += ')';
+      if (d.length > 3) r += ' ' + d.slice(3, 6);
+      if (d.length > 6) r += '-' + d.slice(6, 8);
+      if (d.length > 8) r += '-' + d.slice(8, 10);
+      this.value = d.length ? r : '';
+    });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var bad = null, msg = '';
+      [fName, form.phone].forEach(function (i) { i.classList.remove('is-bad'); i.removeAttribute('aria-invalid'); });
+      if (!fName.value.trim()) { bad = fName; msg = 'Укажите имя'; }
+      else if (form.phone.value.replace(/\D/g, '').length < 11) { bad = form.phone; msg = 'Укажите телефон полностью'; }
+      else if (!form.agree.checked) { bad = form.agree; msg = 'Нужно согласие на обработку данных'; }
+      if (bad) {
+        err.textContent = msg; err.hidden = false;
+        if (bad !== form.agree) { bad.classList.add('is-bad'); bad.setAttribute('aria-invalid', 'true'); }
+        bad.focus(); return;
+      }
+      err.hidden = true;
+      // TODO: отправка заявки (почта / CRM). Данные: name, phone, tariff, guests, room, comment.
+      reachGoal('ny_lead_send', { tariff: form.tariff.value, guests: form.guests.value, room: form.room.value || 'help' });
+      form.hidden = true; ok.hidden = false;
+      ok.querySelector('[data-close]').focus();
+      form.reset();
+    });
+  })();
+
+  /* ===================== КАРТА В ПОДВАЛЕ ===================== */
+  // Яндекс Карты JS API 2.1 (как на kamenniy-cvetok.ru) грузится, только когда подвал близко.
+  // Если API недоступен — подставляем виджет-iframe.
+  (function () {
+    var box = document.getElementById('ftrMap');
+    if (!box) return;
+    var ll = box.getAttribute('data-ll').split(',').map(Number), started = false;
+    function fallback() {
+      if (box.querySelector('iframe')) return;
+      box.innerHTML = '<iframe src="https://yandex.ru/map-widget/v1/?ll=' + ll[1] + '%2C' + ll[0] + '&z=13&pt=' + ll[1] + '%2C' + ll[0] +
+        '%2Cpm2rdm" title="Отель «Каменный цветок» на карте" loading="lazy" allowfullscreen></iframe>';
+    }
+    function draw() {
+      window.ymaps.ready(function () {
+        var map = new window.ymaps.Map(box, { center: ll, zoom: 13, controls: ['fullscreenControl'] }, { suppressMapOpenBlock: false });
+        map.controls.add('zoomControl', { position: { right: 10, top: 56 } }); // слева карточка «Как добраться»
+        map.behaviors.disable('scrollZoom');
+        map.geoObjects.add(new window.ymaps.Placemark(ll,
+          { hintContent: 'Отель «Каменный цветок»', balloonContent: '<b>Отель «Каменный цветок»</b><br>г. Трёхгорный, ул. Горная, 10' },
+          { preset: 'islands#redDotIcon' }));
+      });
+    }
+    function start() {
+      if (started) return; started = true;
+      if (window.ymaps) return draw();
+      var s = document.createElement('script');
+      s.src = 'https://api-maps.yandex.ru/2.1/?lang=ru_RU';
+      s.onload = function () { window.ymaps ? draw() : fallback(); };
+      s.onerror = fallback;
+      document.head.appendChild(s);
+      setTimeout(function () { if (!box.children.length) fallback(); }, 8000);
+    }
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { io.disconnect(); start(); } }, { rootMargin: '400px 0px' });
+      io.observe(box);
+    } else start();
+  })();
 
   /* ===================== НОМЕРА: ОКНО С ПАРАМЕТРАМИ ===================== */
   // Источник — модуль бронирования TravelLine (kamenniy-cvetok-rooms/*/room.json, 26.11.2026).
