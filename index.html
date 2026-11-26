@@ -15,7 +15,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="img/stock/hero-winter.jpg">
 <link rel="stylesheet" href="css/styles.css">
-<script src="shared/switcher.js"></script>
 </head>
 <body>
 
@@ -53,6 +52,7 @@
     <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
     <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
     <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.6 3.5h2.6l1.4 4.2-2 1.3a12 12 0 0 0 6.4 6.4l1.3-2 4.2 1.4v2.6a2 2 0 0 1-2.2 2A17 17 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></g></symbol>
     <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></g></symbol>
     <symbol id="i-menu-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M14.5 3v4.5H19M9 12h7M9 15.5h7M9 19h4"/></g></symbol>
     <symbol id="i-snow" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 2.5v19M3.8 7.2l16.4 9.6M3.8 16.8l16.4-9.6M9.5 4l2.5 2.3L14.5 4M9.5 20l2.5-2.3 2.5 2.3M4 10.4l3.2.9-.8 3.3M20 13.6l-3.2-.9.8-3.3M4 13.6l3.2-.9-.8-3.3M20 10.4l-3.2.9.8 3.3"/></g></symbol>
@@ -89,15 +89,20 @@
 <main>
 
 <!-- ============ 4.1 HERO ============ -->
-<section class="hero" id="top">
-  <div class="hero__bg" aria-hidden="true">
-    <img src="img/stock/hero-winter.jpg" alt="" fetchpriority="high">
-  </div>
+<section class="hero hero--banner" id="top">
   <canvas class="hero__snow" id="snow" aria-hidden="true"></canvas>
+  <div class="hero__poster">
+    <picture>
+      <source media="(max-width:640px)" srcset="img/banner/ny-clean-mobile.webp" width="1073" height="744">
+      <img src="img/banner/ny-clean-2113.webp" srcset="img/banner/ny-clean-1200.webp 1200w, img/banner/ny-clean-2113.webp 2113w" sizes="(max-width:1440px) 100vw, 1392px" width="2113" height="744" alt="Семья гуляет у заснеженного отеля «Каменный цветок» на закате" fetchpriority="high">
+    </picture>
+    <div class="hero__over">
+      <p class="hero__dates"><svg><use href="#i-cal"/></svg>31 декабря 2026 — 2 января 2027</p>
+      <h1 class="hero__title">Новый год 2027 <span>в Каменном цветке</span></h1>
+      <p class="hero__lead">Встретьте праздник среди гор, заснеженных пейзажей и&nbsp;праздничной атмосферы!</p>
+    </div>
+  </div>
   <div class="wrap hero__in">
-    <p class="hero__dates"><svg><use href="#i-cal"/></svg>31 декабря 2026 — 2 января 2027</p>
-    <h1 class="hero__title">Новый год 2027<span>в Каменном цветке</span></h1>
-    <p class="hero__lead">Встретьте праздник среди гор, заснеженных пейзажей и праздничной атмосферы!</p>
     <ul class="hero__chips">
       <li><svg><use href="#i-bed"/></svg>Проживание</li>
       <li><svg><use href="#i-cup"/></svg>Завтраки</li>
@@ -122,44 +127,106 @@
       <div>
         <p class="eyebrow"><img src="img/mark-color.png" alt="" width="22" height="16">Номера и&nbsp;размещение</p>
         <h2 class="h2">Номер для пары, семьи <em>или большой компании</em></h2>
+        <p class="sec__lead">7&nbsp;категорий номеров&nbsp;— от&nbsp;стандарта на&nbsp;двоих до&nbsp;апартамента с&nbsp;тремя спальнями. Нажмите на&nbsp;фото, чтобы посмотреть номер целиком.</p>
       </div>
       <div class="carousel__nav">
         <button class="round" type="button" data-car="prev" aria-label="Предыдущие номера"><svg><use href="#i-left"/></svg></button>
         <button class="round" type="button" data-car="next" aria-label="Следующие номера"><svg><use href="#i-right"/></svg></button>
       </div>
     </div>
-    <p class="todo todo--block" data-note>В рабочей версии список, фото, вместимость и&nbsp;площадь подтягиваются из&nbsp;TravelLine. Цены не&nbsp;выводим — только кнопка перехода к&nbsp;выбору номера.</p>
+    <p class="todo todo--block" data-note>Данные и&nbsp;фото взяты из&nbsp;модуля бронирования TravelLine (26.11.2026). В&nbsp;рабочей версии подтягиваются оттуда же. Цены не&nbsp;выводим&nbsp;— только переход к&nbsp;выбору номера.</p>
     <div class="carousel" id="roomsCarousel" tabindex="0" aria-label="Карусель номеров">
       <ul class="carousel__track">
         <li class="room">
-          <img src="img/rooms/studio.jpg" alt="Студия" loading="lazy">
-          <div class="room__body"><h3>Студия</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>2–4 гостя</span><span><svg><use href="#i-area"/></svg>29 м²</span></p>
-          <a class="btn btn--pine btn--block" data-book="room:studio" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
+          <button class="room__media" type="button" data-room="standard" aria-label="Стандартный номер: фото и описание">
+            <img src="img/rooms/standard/02-s.webp" alt="Стандартный номер" loading="lazy" width="640" height="427">
+            <span class="room__count">7 фото</span>
+          </button>
+          <div class="room__body"><h3>Стандартный номер</h3>
+          <p class="room__desc">Для&nbsp;пары: двуспальная кровать и&nbsp;мини-кухня с&nbsp;обеденной зоной.</p>
+          <p class="room__meta"><span><svg><use href="#i-users"/></svg>до&nbsp;2 гостей</span><span><svg><use href="#i-area"/></svg>18&nbsp;м²</span><span><svg><use href="#i-bed"/></svg>1&nbsp;комната</span></p>
+          <div class="room__acts">
+            <button class="btn btn--outline" type="button" data-room="standard" data-goal="ny_room_view">Подробнее</button>
+            <a class="btn btn--pine" data-book="room:standard" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a>
+          </div></div>
         </li>
         <li class="room">
-          <img src="img/rooms/standard-family.jpg" alt="Стандартный семейный номер" loading="lazy">
-          <div class="room__body"><h3>Стандартный семейный</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>2–3 гостя</span><span><svg><use href="#i-area"/></svg>29 м²</span></p>
-          <a class="btn btn--pine btn--block" data-book="room:standard-family" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
+          <button class="room__media" type="button" data-room="standard-family" aria-label="Стандартный семейный номер: фото и описание">
+            <img src="img/rooms/standard-family/10-s.webp" alt="Стандартный семейный номер" loading="lazy" width="640" height="427">
+            <span class="room__count">11 фото</span>
+          </button>
+          <div class="room__body"><h3>Стандартный семейный</h3>
+          <p class="room__desc">Для&nbsp;пары или&nbsp;небольшой семьи: кровать, диван и&nbsp;мини-кухня.</p>
+          <p class="room__meta"><span><svg><use href="#i-users"/></svg>до&nbsp;3 гостей</span><span><svg><use href="#i-area"/></svg>22&nbsp;м²</span><span><svg><use href="#i-bed"/></svg>1&nbsp;комната</span></p>
+          <div class="room__acts">
+            <button class="btn btn--outline" type="button" data-room="standard-family" data-goal="ny_room_view">Подробнее</button>
+            <a class="btn btn--pine" data-book="room:standard-family" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a>
+          </div></div>
         </li>
         <li class="room">
-          <img src="img/rooms/standard-two-rooms.jpg" alt="Стандартный двухкомнатный номер" loading="lazy">
-          <div class="room__body"><h3>Стандартный двухкомнатный</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>2–4 гостя</span><span><svg><use href="#i-area"/></svg>26 м²</span></p>
-          <a class="btn btn--pine btn--block" data-book="room:standard-two-rooms" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
+          <button class="room__media" type="button" data-room="studio" aria-label="Студия: фото и описание">
+            <img src="img/rooms/studio/01-s.webp" alt="Студия" loading="lazy" width="640" height="427">
+            <span class="room__count">4 фото</span>
+          </button>
+          <div class="room__body"><h3>Студия</h3>
+          <p class="room__desc">Стильная студия с&nbsp;диваном-кроватью и&nbsp;кухонной зоной на&nbsp;4&nbsp;гостей.</p>
+          <p class="room__meta"><span><svg><use href="#i-users"/></svg>до&nbsp;4 гостей</span><span><svg><use href="#i-area"/></svg>29&nbsp;м²</span><span><svg><use href="#i-bed"/></svg>1&nbsp;комната</span></p>
+          <div class="room__acts">
+            <button class="btn btn--outline" type="button" data-room="studio" data-goal="ny_room_view">Подробнее</button>
+            <a class="btn btn--pine" data-book="room:studio" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a>
+          </div></div>
         </li>
         <li class="room">
-          <img src="img/rooms/family-lux.jpg" alt="Семейный люкс" loading="lazy">
-          <div class="room__body"><h3>Семейный люкс</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>2–6 гостей</span><span><svg><use href="#i-area"/></svg>38 м²</span></p>
-          <a class="btn btn--pine btn--block" data-book="room:family-lux" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
+          <button class="room__media" type="button" data-room="lux" aria-label="Люкс: фото и описание">
+            <img src="img/rooms/lux/04-s.webp" alt="Люкс" loading="lazy" width="640" height="427">
+            <span class="room__count">8 фото</span>
+          </button>
+          <div class="room__body"><h3>Люкс</h3>
+          <p class="room__desc">Отдельная спальня и&nbsp;гостиная-студия с&nbsp;кухней и&nbsp;диваном.</p>
+          <p class="room__meta"><span><svg><use href="#i-users"/></svg>до&nbsp;4 гостей</span><span><svg><use href="#i-area"/></svg>36&nbsp;м²</span><span><svg><use href="#i-bed"/></svg>2&nbsp;комнаты</span></p>
+          <div class="room__acts">
+            <button class="btn btn--outline" type="button" data-room="lux" data-goal="ny_room_view">Подробнее</button>
+            <a class="btn btn--pine" data-book="room:lux" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a>
+          </div></div>
         </li>
         <li class="room">
-          <img src="img/rooms/apartment-2br.jpg" alt="Семейный апартамент с 2 спальнями" loading="lazy">
-          <div class="room__body"><h3>Апартамент с&nbsp;2&nbsp;спальнями</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>4–6 гостей</span><span><svg><use href="#i-area"/></svg>64 м²</span></p>
-          <a class="btn btn--pine btn--block" data-book="room:apartment-2br" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
+          <button class="room__media" type="button" data-room="family-lux" aria-label="Семейный люкс: фото и описание">
+            <img src="img/rooms/family-lux/01-s.webp" alt="Семейный люкс" loading="lazy" width="640" height="427">
+            <span class="room__count">5 фото</span>
+          </button>
+          <div class="room__body"><h3>Семейный люкс</h3>
+          <p class="room__desc">Спальня для&nbsp;взрослых и&nbsp;большая гостиная с&nbsp;кухней на&nbsp;6&nbsp;гостей.</p>
+          <p class="room__meta"><span><svg><use href="#i-users"/></svg>до&nbsp;6 гостей</span><span><svg><use href="#i-area"/></svg>38&nbsp;м²</span><span><svg><use href="#i-bed"/></svg>2&nbsp;комнаты</span></p>
+          <div class="room__acts">
+            <button class="btn btn--outline" type="button" data-room="family-lux" data-goal="ny_room_view">Подробнее</button>
+            <a class="btn btn--pine" data-book="room:family-lux" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a>
+          </div></div>
         </li>
         <li class="room">
-          <img src="img/rooms/apartment-3br.jpg" alt="Семейный апартамент с 3 спальнями" loading="lazy">
-          <div class="room__body"><h3>Апартамент с&nbsp;3&nbsp;спальнями</h3><p class="room__meta"><span><svg><use href="#i-users"/></svg>6–9 гостей</span><span><svg><use href="#i-area"/></svg>64 м²</span></p>
-          <a class="btn btn--pine btn--block" data-book="room:apartment-3br" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a></div>
+          <button class="room__media" type="button" data-room="apartment-2br" aria-label="Семейный апартамент с 2 спальнями: фото и описание">
+            <img src="img/rooms/apartment-2br/16-s.webp" alt="Семейный апартамент с 2 спальнями" loading="lazy" width="640" height="427">
+            <span class="room__count">18 фото</span>
+          </button>
+          <div class="room__body"><h3>Апартамент с&nbsp;2 спальнями</h3>
+          <p class="room__desc">Две спальни, гостиная со&nbsp;столом на&nbsp;6 и&nbsp;полноценная кухня.</p>
+          <p class="room__meta"><span><svg><use href="#i-users"/></svg>до&nbsp;6 гостей</span><span><svg><use href="#i-area"/></svg>64&nbsp;м²</span><span><svg><use href="#i-bed"/></svg>3&nbsp;комнаты</span></p>
+          <div class="room__acts">
+            <button class="btn btn--outline" type="button" data-room="apartment-2br" data-goal="ny_room_view">Подробнее</button>
+            <a class="btn btn--pine" data-book="room:apartment-2br" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a>
+          </div></div>
+        </li>
+        <li class="room">
+          <button class="room__media" type="button" data-room="apartment-3br" aria-label="Семейный апартамент с 3 спальнями: фото и описание">
+            <img src="img/rooms/apartment-3br/01-s.webp" alt="Семейный апартамент с 3 спальнями" loading="lazy" width="640" height="427">
+            <span class="room__count">26 фото</span>
+          </button>
+          <div class="room__body"><h3>Апартамент с&nbsp;3 спальнями</h3>
+          <p class="room__desc">Три спальни и&nbsp;большая гостиная с&nbsp;кухней&nbsp;— для&nbsp;большой семьи или&nbsp;компании.</p>
+          <p class="room__meta"><span><svg><use href="#i-users"/></svg>до&nbsp;9 гостей</span><span><svg><use href="#i-area"/></svg>64&nbsp;м²</span><span><svg><use href="#i-bed"/></svg>4&nbsp;комнаты</span></p>
+          <div class="room__acts">
+            <button class="btn btn--outline" type="button" data-room="apartment-3br" data-goal="ny_room_view">Подробнее</button>
+            <a class="btn btn--pine" data-book="room:apartment-3br" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать номер</a>
+          </div></div>
         </li>
       </ul>
     </div>
@@ -176,7 +243,7 @@
     </div>
     <div class="mood">
       <figure class="mood__item mood__item--a reveal">
-        <img src="img/stock/nature-path.jpg" alt="Заснеженные ели вдоль лесной тропы" loading="lazy">
+        <img src="img/zav/nature-ridge.webp" alt="Закат над заснеженными хребтами у Завьялихи" loading="lazy">
         <figcaption><b>Зимняя природа</b>Хвойный лес, горы Южного Урала и&nbsp;снег, который скрипит под ногами</figcaption>
       </figure>
       <figure class="mood__item mood__item--b reveal">
@@ -184,11 +251,11 @@
         <figcaption><b>Уютное проживание</b>Светлые номера с&nbsp;кухней — для пары, семьи или большой компании</figcaption>
       </figure>
       <figure class="mood__item mood__item--c reveal">
-        <img src="img/stock/ski-slope.jpg" alt="Горнолыжный склон с катающимися" loading="lazy">
+        <img src="img/zav/family-ski.webp" alt="Семья на лыжах на склоне Завьялихи" loading="lazy">
         <figcaption><b>Катание</b>Горные лыжи и&nbsp;сноуборд на склонах Завьялихи</figcaption>
       </figure>
       <figure class="mood__item mood__item--d reveal">
-        <img src="img/stock/evening-tree.jpg" alt="Новогодняя ель в огнях зимним вечером" loading="lazy">
+        <img src="img/zav/evening-lights.webp" alt="Огни Завьялихи зимним вечером" loading="lazy">
         <figcaption><b>Праздничный вечер</b>Огни, музыка и&nbsp;прогулки на свежем воздухе</figcaption>
       </figure>
     </div>
@@ -225,7 +292,7 @@
           </ul>
           <div class="tariff__foot">
             <p class="tariff__price">Стоимость и&nbsp;наличие мест — в&nbsp;модуле бронирования</p>
-            <a class="btn btn--gold btn--block" data-book="banquet" data-goal="ny_book_tariff_banquet" href="https://kamenniy-cvetok.ru/booking/">Забронировать со скидкой<svg><use href="#i-arrow"/></svg></a>
+            <button class="btn btn--gold btn--block" type="button" data-open="lead-modal" data-lead="banquet" data-goal="ny_book_tariff_banquet">Забронировать со скидкой<svg><use href="#i-arrow"/></svg></button>
             <p class="tariff__note">Банкет — не более 70 гостей</p>
           </div>
         </div>
@@ -330,7 +397,7 @@
       </div>
       <div class="banquet__actions">
         <button class="btn btn--outline" type="button" data-open="menu-modal" data-goal="ny_menu_view"><svg><use href="#i-menu-doc"/></svg>Посмотреть меню</button>
-        <a class="btn btn--gold" data-book="banquet" data-goal="ny_book_banquet" href="https://kamenniy-cvetok.ru/booking/">Забронировать со скидкой<svg><use href="#i-arrow"/></svg></a>
+        <button class="btn btn--gold" type="button" data-open="lead-modal" data-lead="banquet" data-goal="ny_book_banquet">Забронировать со скидкой<svg><use href="#i-arrow"/></svg></button>
       </div>
       <p class="seats" aria-label="Количество мест на банкете ограничено">
         <span class="seats__bar"><i style="--fill:100%"></i></span>
@@ -342,7 +409,7 @@
 
 <!-- ============ 4.6 1 ЯНВАРЯ ============ -->
 <section class="jan1" id="jan1">
-  <div class="jan1__bg" aria-hidden="true"><img src="img/stock/fest-folk.jpg" alt="" loading="lazy"></div>
+  <div class="jan1__bg" aria-hidden="true"><img src="img/zav/fest-stage.webp" alt="" loading="lazy"></div>
   <div class="wrap jan1__in">
     <div class="jan1__text reveal">
       <p class="jan1__date"><span>1</span>января<br>2027</p>
@@ -352,7 +419,7 @@
     </div>
     <div class="jan1__cards">
       <figure class="reveal"><img src="img/stock/uha-fire.jpg" alt="Котелок с ухой над костром" loading="lazy"><figcaption>Уха на&nbsp;костре</figcaption></figure>
-      <figure class="reveal"><img src="img/stock/uha-cauldrons.jpg" alt="Котлы на открытом огне" loading="lazy"><figcaption>Горячее угощение</figcaption></figure>
+      <figure class="reveal"><img src="img/zav/fest-kids.webp" alt="Дети с ростовыми куклами на празднике в Завьялихе" loading="lazy"><figcaption>Зимние забавы для детей</figcaption></figure>
     </div>
   </div>
 </section>
@@ -450,7 +517,7 @@
         <li><svg><use href="#i-check"/></svg>Скидка действует только на&nbsp;тариф «Новогодний» с&nbsp;банкетом</li>
         <li><svg><use href="#i-check"/></svg>С&nbsp;11&nbsp;ноября 2026 года и&nbsp;до&nbsp;особого распоряжения — пока загрузка не&nbsp;достигла 60%</li>
       </ul>
-      <a class="btn btn--gold btn--lg" data-book="banquet" data-goal="ny_book_early" href="https://kamenniy-cvetok.ru/booking/">Забронировать со скидкой<svg><use href="#i-arrow"/></svg></a>
+      <button class="btn btn--gold btn--lg" type="button" data-open="lead-modal" data-lead="banquet" data-goal="ny_book_early">Забронировать со скидкой<svg><use href="#i-arrow"/></svg></button>
     </div>
   </div>
 </section>
@@ -498,6 +565,7 @@
     <div class="ftr__col">
       <p><svg><use href="#i-pin"/></svg><span>Челябинская область, г.&nbsp;Трёхгорный, ул.&nbsp;Горная, 10</span></p>
       <p><svg><use href="#i-phone"/></svg><span><a href="tel:+73519151520">+7 (351) 915-15-20</a>, <a href="tel:+79049709999">+7 (904) 970-99-99</a></span></p>
+      <p><svg><use href="#i-mail"/></svg><span><a href="mailto:9151520kkc@gmail.com">9151520kkc@gmail.com</a></span></p>
     </div>
     <nav class="ftr__col ftr__links" aria-label="Ссылки сайта">
       <a href="https://kamenniy-cvetok.ru/rooms/">Номера</a>
@@ -506,8 +574,17 @@
       <a href="https://kamenniy-cvetok.ru/privacy-policy/">Политика конфиденциальности</a>
     </nav>
   </div>
+  <div class="wrap ftr__map">
+    <div class="ftr__map-frame" id="ftrMap" data-ll="54.826885,58.510907" role="region" aria-label="Отель «Каменный цветок» на карте"></div>
+    <div class="ftr__map-card">
+      <p class="ftr__map-title">Как добраться</p>
+      <p>Отель «Каменный цветок» — у&nbsp;горнолыжного комплекса Завьялиха, г.&nbsp;Трёхгорный, ул.&nbsp;Горная,&nbsp;10.</p>
+      <a class="btn btn--gold" href="https://yandex.ru/maps/?rtext=~54.826885%2C58.510907&amp;rtt=auto" target="_blank" rel="noopener" data-goal="ny_route">Построить маршрут<svg><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
   <div class="wrap ftr__bottom">
     <p>© 2026 Отель «Каменный цветок» · Завьялиха</p>
+    <p class="ftr__legal">ООО «Курорт Каменный цветок» · ИНН&nbsp;7453363975 · КПП&nbsp;745301001 · ОГРН&nbsp;1257400007523<br>Юридический адрес: 456382, Челябинская область, г.&nbsp;Трёхгорный, ул.&nbsp;Горная, д.&nbsp;10</p>
     <p class="ftr__credits">Часть фото — временные заглушки (Wikimedia Commons, лицензии CC), см. <a href="credits.html">список источников</a>.</p>
   </div>
 </footer>
@@ -528,6 +605,67 @@
     <p>За&nbsp;14&nbsp;дней до&nbsp;заезда сотрудник ресторана позвонит вам, чтобы согласовать блюда и&nbsp;рассадку.</p>
     <p class="todo todo--block" data-note>Контент-менеджеру: заменить текст на&nbsp;ссылку на&nbsp;PDF меню или вставить меню списком.</p>
     <button class="btn btn--pine" type="button" data-close>Понятно</button>
+  </div>
+</div>
+
+<!-- Заявка на бронирование со скидкой -->
+<div class="modal modal--lead" id="lead-modal" role="dialog" aria-modal="true" aria-labelledby="leadTitle" hidden>
+  <div class="modal__box lead">
+    <button class="modal__close" type="button" data-close aria-label="Закрыть"><svg><use href="#i-close"/></svg></button>
+    <form class="lead__form" id="leadForm" novalidate>
+      <p class="eyebrow"><img src="img/mark-color.png" alt="" width="22" height="16">Раннее бронирование −10%</p>
+      <h3 class="h3" id="leadTitle">Заявка на&nbsp;Новый год 2027</h3>
+      <p class="lead__sub">Оставьте контакты — администратор перезвонит, подберёт номер и&nbsp;закрепит скидку 10% на&nbsp;тариф с&nbsp;банкетом.</p>
+      <div class="lead__grid">
+        <label class="fld"><span>Имя</span><input name="name" type="text" autocomplete="name" required placeholder="Как к вам обращаться"></label>
+        <label class="fld"><span>Телефон</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" required placeholder="+7 (___) ___-__-__"></label>
+        <label class="fld"><span>Тариф</span><select name="tariff"><option value="banquet">С банкетом, −10%</option><option value="base">Без банкета</option></select></label>
+        <label class="fld"><span>Гостей</span><select name="guests"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option></select></label>
+        <label class="fld fld--wide"><span>Номер</span><select name="room"><option value="">Помогите выбрать</option><option>Стандартный номер</option><option>Стандартный семейный номер</option><option>Студия</option><option>Люкс</option><option>Семейный люкс</option><option>Семейный апартамент с 2 спальнями</option><option>Семейный апартамент с 3 спальнями</option></select></label>
+        <label class="fld fld--wide"><span>Комментарий</span><textarea name="comment" rows="2" placeholder="Дети, питомцы, удобное время для звонка"></textarea></label>
+      </div>
+      <label class="lead__agree"><input name="agree" type="checkbox" required><span>Согласен на&nbsp;обработку персональных данных</span></label>
+      <p class="lead__err" id="leadErr" role="alert" hidden></p>
+      <button class="btn btn--gold btn--block" type="submit">Отправить заявку<svg><use href="#i-arrow"/></svg></button>
+      <p class="todo todo--block" data-note>Разработчику: подключить отправку заявки (почта / CRM / TravelLine) и&nbsp;ссылку на&nbsp;политику обработки данных. Сейчас форма только проверяет поля и&nbsp;показывает «Спасибо».</p>
+    </form>
+    <div class="lead__ok" id="leadOk" hidden>
+      <span class="lead__ok-ico"><svg><use href="#i-check"/></svg></span>
+      <h3 class="h3">Заявка отправлена</h3>
+      <p>Администратор перезвонит в&nbsp;ближайшее время. Скидка 10% закреплена за&nbsp;вами.</p>
+      <p>Срочно? Позвоните: <a href="tel:+73519151520">+7 (351) 915-15-20</a></p>
+      <button class="btn btn--pine" type="button" data-close>Хорошо</button>
+    </div>
+  </div>
+</div>
+
+<!-- Окно номера -->
+<div class="modal modal--room" id="room-modal" role="dialog" aria-modal="true" aria-labelledby="rmTitle" hidden>
+  <div class="modal__box rm">
+    <button class="modal__close" type="button" data-close aria-label="Закрыть"><svg><use href="#i-close"/></svg></button>
+    <div class="rm__gallery">
+      <div class="rm__stage">
+        <img class="rm__bg" id="rmBg" alt="" aria-hidden="true">
+        <img class="rm__photo" id="rmPhoto" alt="">
+        <button class="rm__nav rm__nav--prev" type="button" data-rm="prev" aria-label="Предыдущее фото"><svg><use href="#i-left"/></svg></button>
+        <button class="rm__nav rm__nav--next" type="button" data-rm="next" aria-label="Следующее фото"><svg><use href="#i-right"/></svg></button>
+        <span class="rm__count" id="rmCount" aria-live="polite"></span>
+      </div>
+      <div class="rm__thumbs" id="rmThumbs"></div>
+    </div>
+    <div class="rm__info">
+      <p class="eyebrow"><img src="img/mark-color.png" alt="" width="22" height="16"><span id="rmType"></span></p>
+      <h3 class="rm__title" id="rmTitle"></h3>
+      <p class="rm__lead" id="rmLead"></p>
+      <ul class="rm__facts" id="rmFacts"></ul>
+      <ul class="rm__tags" id="rmTags"></ul>
+      <dl class="rm__specs" id="rmSpecs"></dl>
+      <p class="todo todo--block" id="rmNote" data-note hidden></p>
+      <div class="rm__cta">
+        <a class="btn btn--gold" id="rmBook" data-book="" data-goal="ny_book_room" href="https://kamenniy-cvetok.ru/booking/">Выбрать этот номер<svg><use href="#i-arrow"/></svg></a>
+        <p class="rm__tour">Тур 31.12–02.01, бронирование только целиком. Цена&nbsp;— в&nbsp;модуле бронирования.</p>
+      </div>
+    </div>
   </div>
 </div>
 

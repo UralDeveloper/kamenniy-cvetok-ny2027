@@ -15,13 +15,15 @@
       banquet: 'NY2027_BANQUET', // «Новогодний» с банкетом
       base: 'NY2027_BASE'        // «Новогодний» без банкета
     },
+    // ID категорий номеров в TravelLine (из модуля бронирования, 26.11.2026)
     rooms: {
-      'studio': 'ROOM_STUDIO',
-      'standard-family': 'ROOM_STANDARD_FAMILY',
-      'standard-two-rooms': 'ROOM_STANDARD_TWO',
-      'family-lux': 'ROOM_FAMILY_LUX',
-      'apartment-2br': 'ROOM_APT_2BR',
-      'apartment-3br': 'ROOM_APT_3BR'
+      'standard': '373795',
+      'standard-family': '348986',
+      'studio': '348987',
+      'lux': '375215',
+      'family-lux': '352976',
+      'apartment-2br': '348989',
+      'apartment-3br': '348990'
     }
   };
 
@@ -307,12 +309,15 @@
 
   /* ===================== МОДАЛКА ===================== */
   var lastFocus = null;
+  function openModal(m, trigger) {
+    lastFocus = trigger || document.activeElement;
+    m.hidden = false; document.body.style.overflow = 'hidden';
+    var f = m.querySelector('[data-close]'); if (f) f.focus();
+  }
   document.querySelectorAll('[data-open]').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var m = document.getElementById(btn.getAttribute('data-open'));
-      if (!m) return;
-      lastFocus = btn; m.hidden = false; document.body.style.overflow = 'hidden';
-      var f = m.querySelector('[data-close]'); if (f) f.focus();
+      if (m) openModal(m, btn);
     });
   });
   function closeModal(m) { m.hidden = true; document.body.style.overflow = ''; if (lastFocus) lastFocus.focus(); }
@@ -320,10 +325,513 @@
     m.addEventListener('click', function (e) { if (e.target === m || e.target.closest('[data-close]')) closeModal(m); });
   });
   document.addEventListener('keydown', function (e) {
+    var open = document.querySelector('.modal:not([hidden])');
+    if (e.key === 'Tab' && open) { // фокус не уходит из открытого окна
+      var f = Array.prototype.filter.call(open.querySelectorAll('a[href],button:not([disabled]),input,select,textarea'), function (el) { return el.offsetParent !== null; });
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+      return;
+    }
     if (e.key !== 'Escape') return;
     document.querySelectorAll('.modal:not([hidden])').forEach(closeModal);
     if (hdr.classList.contains('is-open')) closeMenu();
   });
+
+  /* ===================== ЗАЯВКА СО СКИДКОЙ ===================== */
+  (function () {
+    var m = document.getElementById('lead-modal'), form = document.getElementById('leadForm');
+    if (!m || !form) return;
+    var ok = document.getElementById('leadOk'), err = document.getElementById('leadErr');
+    var fName = form.elements.namedItem('name'); // form.name — это атрибут формы, не поле
+    document.querySelectorAll('[data-open="lead-modal"]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        form.hidden = false; ok.hidden = true; err.hidden = true;
+        if (b.getAttribute('data-lead')) form.tariff.value = b.getAttribute('data-lead');
+        setTimeout(function () { fName.focus(); }, 30);
+      });
+    });
+    form.phone.addEventListener('input', function () { // +7 (XXX) XXX-XX-XX
+      var d = this.value.replace(/\D/g, '');
+      if (d[0] === '8' || d[0] === '7') d = d.slice(1);
+      d = d.slice(0, 10);
+      var r = '+7';
+      if (d.length) r += ' (' + d.slice(0, 3);
+      if (d.length >= 3) r += ')';
+      if (d.length > 3) r += ' ' + d.slice(3, 6);
+      if (d.length > 6) r += '-' + d.slice(6, 8);
+      if (d.length > 8) r += '-' + d.slice(8, 10);
+      this.value = d.length ? r : '';
+    });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var bad = null, msg = '';
+      [fName, form.phone].forEach(function (i) { i.classList.remove('is-bad'); i.removeAttribute('aria-invalid'); });
+      if (!fName.value.trim()) { bad = fName; msg = 'Укажите имя'; }
+      else if (form.phone.value.replace(/\D/g, '').length < 11) { bad = form.phone; msg = 'Укажите телефон полностью'; }
+      else if (!form.agree.checked) { bad = form.agree; msg = 'Нужно согласие на обработку данных'; }
+      if (bad) {
+        err.textContent = msg; err.hidden = false;
+        if (bad !== form.agree) { bad.classList.add('is-bad'); bad.setAttribute('aria-invalid', 'true'); }
+        bad.focus(); return;
+      }
+      err.hidden = true;
+      // TODO: отправка заявки (почта / CRM). Данные: name, phone, tariff, guests, room, comment.
+      reachGoal('ny_lead_send', { tariff: form.tariff.value, guests: form.guests.value, room: form.room.value || 'help' });
+      form.hidden = true; ok.hidden = false;
+      ok.querySelector('[data-close]').focus();
+      form.reset();
+    });
+  })();
+
+  /* ===================== КАРТА В ПОДВАЛЕ ===================== */
+  // Яндекс Карты JS API 2.1 (как на kamenniy-cvetok.ru) грузится, только когда подвал близко.
+  // Если API недоступен — подставляем виджет-iframe.
+  (function () {
+    var box = document.getElementById('ftrMap');
+    if (!box) return;
+    var ll = box.getAttribute('data-ll').split(',').map(Number), started = false;
+    function fallback() {
+      if (box.querySelector('iframe')) return;
+      box.innerHTML = '<iframe src="https://yandex.ru/map-widget/v1/?ll=' + ll[1] + '%2C' + ll[0] + '&z=13&pt=' + ll[1] + '%2C' + ll[0] +
+        '%2Cpm2rdm" title="Отель «Каменный цветок» на карте" loading="lazy" allowfullscreen></iframe>';
+    }
+    function draw() {
+      window.ymaps.ready(function () {
+        var map = new window.ymaps.Map(box, { center: ll, zoom: 13, controls: ['fullscreenControl'] }, { suppressMapOpenBlock: false });
+        map.controls.add('zoomControl', { position: { right: 10, top: 56 } }); // слева карточка «Как добраться»
+        map.behaviors.disable('scrollZoom');
+        map.geoObjects.add(new window.ymaps.Placemark(ll,
+          { hintContent: 'Отель «Каменный цветок»', balloonContent: '<b>Отель «Каменный цветок»</b><br>г. Трёхгорный, ул. Горная, 10' },
+          { preset: 'islands#redDotIcon' }));
+      });
+    }
+    function start() {
+      if (started) return; started = true;
+      if (window.ymaps) return draw();
+      var s = document.createElement('script');
+      s.src = 'https://api-maps.yandex.ru/2.1/?lang=ru_RU';
+      s.onload = function () { window.ymaps ? draw() : fallback(); };
+      s.onerror = fallback;
+      document.head.appendChild(s);
+      setTimeout(function () { if (!box.children.length) fallback(); }, 8000);
+    }
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { io.disconnect(); start(); } }, { rootMargin: '400px 0px' });
+      io.observe(box);
+    } else start();
+  })();
+
+  /* ===================== НОМЕРА: ОКНО С ПАРАМЕТРАМИ ===================== */
+  // Источник — модуль бронирования TravelLine (kamenniy-cvetok-rooms/*/room.json, 26.11.2026).
+  // Фото: img/rooms/<slug>/NN.webp (до 1600 px) и NN-s.webp (640 px — карточки и миниатюры).
+  var ROOMS = {
+    "standard": {
+      "name": "Стандартный номер",
+      "type": "Однокомнатный номер",
+      "guests": 2,
+      "area": "18",
+      "rooms": "1",
+      "roomsWord": "комната",
+      "lead": "Однокомнатный номер для&nbsp;двоих: двуспальная кровать, полноценная мини-кухня и&nbsp;обеденная зона на&nbsp;двух гостей.",
+      "tags": [
+        "Двуспальная кровать",
+        "Мини-кухня",
+        "Wi-Fi",
+        "Кондиционер",
+        "Можно с питомцами"
+      ],
+      "photos": 7,
+      "cover": 2,
+      "specs": [
+        [
+          "Спальные места",
+          "Двуспальная кровать."
+        ],
+        [
+          "Кухня",
+          "Варочная панель, мини-холодильник, микроволновая печь, чайник, посуда для&nbsp;готовки, столовая посуда и&nbsp;приборы. Обеденная зона на&nbsp;2&nbsp;гостей."
+        ],
+        [
+          "В номере",
+          "Телевизор, кондиционер, Wi-Fi, сейф."
+        ],
+        [
+          "Ванная",
+          "Душевая кабина, фен, банные полотенца."
+        ],
+        [
+          "Дети",
+          "Один ребёнок до&nbsp;4 лет может жить без отдельного спального места."
+        ],
+        [
+          "Питомцы",
+          "Можно с&nbsp;одним питомцем по&nbsp;согласованию с&nbsp;отелем, за&nbsp;доплату."
+        ]
+      ],
+      "note": ""
+    },
+    "standard-family": {
+      "name": "Стандартный семейный номер",
+      "type": "Однокомнатный номер",
+      "guests": 3,
+      "area": "22",
+      "rooms": "1",
+      "roomsWord": "комната",
+      "lead": "Уютный однокомнатный номер для&nbsp;пары или&nbsp;небольшой семьи. Диван&nbsp;— дополнительное спальное место.",
+      "tags": [
+        "Двуспальная кровать",
+        "Диван-кровать",
+        "Мини-кухня",
+        "Кондиционер",
+        "Телевизор"
+      ],
+      "photos": 11,
+      "cover": 10,
+      "specs": [
+        [
+          "Спальные места",
+          "Двуспальная кровать и&nbsp;диван-кровать&nbsp;— дополнительное место."
+        ],
+        [
+          "Кухня",
+          "Варочная панель, мини-холодильник, микроволновая печь, чайник, посуда. Обеденная зона на&nbsp;3&nbsp;гостей."
+        ],
+        [
+          "В номере",
+          "Телевизор, кондиционер, Wi-Fi, внутренний телефон, сейф."
+        ],
+        [
+          "Ванная",
+          "Душевая кабина, фен, банные полотенца."
+        ],
+        [
+          "Расположение",
+          "1&nbsp;этаж, окна выходят на&nbsp;парковку."
+        ],
+        [
+          "Дети",
+          "Один ребёнок до&nbsp;4 лет может жить без отдельного спального места."
+        ],
+        [
+          "Питомцы",
+          "Можно с&nbsp;одним питомцем по&nbsp;согласованию с&nbsp;отелем, за&nbsp;доплату."
+        ]
+      ],
+      "note": "В&nbsp;TravelLine у&nbsp;этого номера в&nbsp;характеристиках 22&nbsp;м², а&nbsp;в&nbsp;описании 29&nbsp;м². На&nbsp;макете стоит 22&nbsp;м², нужно сверить с&nbsp;отелем."
+    },
+    "studio": {
+      "name": "Студия",
+      "type": "Номер-студия",
+      "guests": 4,
+      "area": "29",
+      "rooms": "1",
+      "roomsWord": "комната",
+      "lead": "Стильная и&nbsp;уютная студия: двуспальная кровать или&nbsp;две односпальные и&nbsp;диван, который раскладывается в&nbsp;место для&nbsp;ещё&nbsp;одного гостя.",
+      "tags": [
+        "Двуспальная кровать",
+        "Диван-кровать",
+        "Кухонная зона",
+        "Кондиционер",
+        "Телевизор"
+      ],
+      "photos": 4,
+      "cover": 1,
+      "specs": [
+        [
+          "Спальные места",
+          "Двуспальная кровать или&nbsp;две односпальные, небольшой диван-кровать на&nbsp;1&nbsp;гостя."
+        ],
+        [
+          "Кухня",
+          "Холодильник, микроволновая печь, варочная поверхность, чайник, посуда. Обеденный стол на&nbsp;3&nbsp;гостей."
+        ],
+        [
+          "В номере",
+          "Телевизор, кондиционер, Wi-Fi, внутренний телефон, сейф. Вид во&nbsp;двор."
+        ],
+        [
+          "Ванная",
+          "Душевая кабина, фен, банные полотенца."
+        ],
+        [
+          "Расположение",
+          "1–4&nbsp;этаж. В&nbsp;корпусе нет лифта."
+        ],
+        [
+          "Дети",
+          "Один ребёнок до&nbsp;4 лет может жить без отдельного спального места."
+        ],
+        [
+          "Питомцы",
+          "Можно с&nbsp;одним питомцем по&nbsp;согласованию с&nbsp;отелем, за&nbsp;доплату."
+        ]
+      ],
+      "note": ""
+    },
+    "lux": {
+      "name": "Люкс",
+      "type": "Двухкомнатный номер",
+      "guests": 4,
+      "area": "36",
+      "rooms": "2",
+      "roomsWord": "комнаты",
+      "lead": "Двухкомнатный номер с&nbsp;кухней: изолированная спальня с&nbsp;двуспальной кроватью и&nbsp;гостиная-студия с&nbsp;раскладным диваном.",
+      "tags": [
+        "Две комнаты",
+        "Мини-кухня",
+        "Двуспальная кровать",
+        "Диван-кровать",
+        "Можно с питомцами"
+      ],
+      "photos": 8,
+      "cover": 4,
+      "specs": [
+        [
+          "Спальные места",
+          "В&nbsp;спальне двуспальная кровать, в&nbsp;гостиной раскладной диван."
+        ],
+        [
+          "Кухня",
+          "Холодильник, микроволновая печь, варочная поверхность, чайник, посуда и&nbsp;приборы. Обеденный стол на&nbsp;4&nbsp;человек."
+        ],
+        [
+          "В номере",
+          "Телевизор, кондиционер, Wi-Fi."
+        ],
+        [
+          "Ванная",
+          "Душевая кабина, фен, банные полотенца."
+        ],
+        [
+          "Расположение",
+          "2 и&nbsp;3&nbsp;этаж. В&nbsp;корпусе нет лифта."
+        ],
+        [
+          "Дети",
+          "Один ребёнок до&nbsp;4 лет может жить без отдельного спального места."
+        ],
+        [
+          "Питомцы",
+          "Можно с&nbsp;одним питомцем по&nbsp;согласованию с&nbsp;отелем, за&nbsp;доплату."
+        ]
+      ],
+      "note": ""
+    },
+    "family-lux": {
+      "name": "Семейный люкс",
+      "type": "Двухкомнатный номер",
+      "guests": 6,
+      "area": "38",
+      "rooms": "2",
+      "roomsWord": "комнаты",
+      "lead": "Двухкомнатный номер для&nbsp;семейного отдыха: отдельная спальня и&nbsp;большая комната с&nbsp;кухней, обеденной, гостиной и&nbsp;спальной зонами.",
+      "tags": [
+        "Две комнаты",
+        "Кухня с духовкой",
+        "Двуспальная кровать",
+        "Две односпальные кровати",
+        "Кондиционер"
+      ],
+      "photos": 5,
+      "cover": 1,
+      "specs": [
+        [
+          "Спальные места",
+          "В&nbsp;спальне двуспальная кровать. Во&nbsp;второй комнате две односпальные кровати и&nbsp;раскладной диван."
+        ],
+        [
+          "Кухня",
+          "Холодильник, микроволновая печь, варочная поверхность, духовой шкаф, электрический чайник, посуда. Стол на&nbsp;6&nbsp;человек."
+        ],
+        [
+          "В номере",
+          "Телевизор в&nbsp;спальне, кондиционер, Wi-Fi, внутренний телефон, сейф."
+        ],
+        [
+          "Ванная",
+          "Душевая кабина, фен."
+        ],
+        [
+          "Дети",
+          "Один ребёнок до&nbsp;4 лет может жить без отдельного спального места."
+        ],
+        [
+          "Питомцы",
+          "Можно с&nbsp;одним питомцем по&nbsp;согласованию с&nbsp;отелем, за&nbsp;доплату."
+        ]
+      ],
+      "note": ""
+    },
+    "apartment-2br": {
+      "name": "Семейный апартамент с&nbsp;2 спальнями",
+      "type": "Трёхкомнатный апартамент",
+      "guests": 6,
+      "area": "64",
+      "rooms": "3",
+      "roomsWord": "комнаты",
+      "lead": "Просторный апартамент для&nbsp;семьи или&nbsp;дружеской компании: две отдельные спальни, гостиная с&nbsp;обеденной зоной и&nbsp;оборудованная кухня.",
+      "tags": [
+        "Две спальни",
+        "Кухня с духовкой",
+        "Две двуспальные кровати",
+        "Диван-кровать",
+        "Кондиционер"
+      ],
+      "photos": 18,
+      "cover": 16,
+      "specs": [
+        [
+          "Спальные места",
+          "В&nbsp;каждой спальне двуспальная кровать, в&nbsp;гостиной двуспальный раскладной диван."
+        ],
+        [
+          "Кухня",
+          "Холодильник, духовой шкаф, варочная панель, микроволновая печь, чайник, посуда. Стол на&nbsp;6&nbsp;человек."
+        ],
+        [
+          "В номере",
+          "Телевизор, кондиционеры в&nbsp;гостиной и&nbsp;спальнях, шкафы, утюг, сейф."
+        ],
+        [
+          "Ванная",
+          "Душевая кабина, фен, банные полотенца."
+        ],
+        [
+          "Расположение",
+          "4&nbsp;этаж. В&nbsp;корпусе нет лифта."
+        ],
+        [
+          "Дети",
+          "Один ребёнок до&nbsp;4 лет может жить без отдельного спального места."
+        ],
+        [
+          "Питомцы",
+          "Можно с&nbsp;одним питомцем по&nbsp;согласованию с&nbsp;отелем, за&nbsp;доплату."
+        ]
+      ],
+      "note": ""
+    },
+    "apartment-3br": {
+      "name": "Семейный апартамент с&nbsp;3 спальнями",
+      "type": "Четырёхкомнатный апартамент",
+      "guests": 9,
+      "area": "64",
+      "rooms": "4",
+      "roomsWord": "комнаты",
+      "lead": "Номер для&nbsp;большой семьи или&nbsp;компании: три отдельные спальни, большая гостиная с&nbsp;обеденной зоной и&nbsp;кухней, прихожая.",
+      "tags": [
+        "Три спальни",
+        "Кухня с духовкой",
+        "Три двуспальные кровати",
+        "Диван-кровать",
+        "Кондиционер"
+      ],
+      "photos": 26,
+      "cover": 1,
+      "specs": [
+        [
+          "Спальные места",
+          "В&nbsp;каждой спальне двуспальная кровать, в&nbsp;одной из&nbsp;спален ещё&nbsp;диван. В&nbsp;гостиной диван."
+        ],
+        [
+          "Кухня",
+          "Холодильник, духовой шкаф, варочная панель, микроволновая печь, чайник, посуда и&nbsp;приборы. Стол на&nbsp;6&nbsp;персон."
+        ],
+        [
+          "В номере",
+          "Телевизор, кондиционеры, шкафы, туалетный столик, зеркало в&nbsp;полный рост, утюг и&nbsp;гладильная доска, сушилка для&nbsp;белья, сейф."
+        ],
+        [
+          "Ванная",
+          "Душевая кабина, фен, банные полотенца."
+        ],
+        [
+          "Дети",
+          "Один ребёнок до&nbsp;4 лет может жить без отдельного спального места."
+        ],
+        [
+          "Питомцы",
+          "Можно с&nbsp;одним питомцем по&nbsp;согласованию с&nbsp;отелем, за&nbsp;доплату."
+        ]
+      ],
+      "note": "В&nbsp;TravelLine у&nbsp;этого номера в&nbsp;характеристиках до&nbsp;9&nbsp;мест, а&nbsp;в&nbsp;описании до&nbsp;10&nbsp;гостей. На&nbsp;макете стоит 9, нужно сверить с&nbsp;отелем."
+    }
+  };
+
+  (function roomModal() {
+    var m = document.getElementById('room-modal');
+    if (!m) return;
+    var $ = function (id) { return document.getElementById(id); };
+    var bg = $('rmBg'), photo = $('rmPhoto'), thumbs = $('rmThumbs'), count = $('rmCount');
+    var cur = { slug: null, i: 0, n: 0, name: '' };
+    function src(slug, k, small) { return 'img/rooms/' + slug + '/' + (k < 10 ? '0' : '') + k + (small ? '-s' : '') + '.webp'; }
+
+    function show(i) {
+      cur.i = (i + cur.n) % cur.n;
+      photo.src = src(cur.slug, cur.i + 1);
+      bg.src = src(cur.slug, cur.i + 1, true);
+      photo.alt = cur.name + ', фото ' + (cur.i + 1) + ' из ' + cur.n;
+      count.textContent = (cur.i + 1) + ' / ' + cur.n;
+      var on = null;
+      thumbs.querySelectorAll('button').forEach(function (b, k) {
+        if (k === cur.i) { b.setAttribute('aria-current', 'true'); on = b; } else b.removeAttribute('aria-current');
+      });
+      if (on) thumbs.scrollTo({ left: on.offsetLeft - (thumbs.clientWidth - on.offsetWidth) / 2, behavior: 'smooth' });
+      // подгружаем соседние фото заранее
+      [cur.i + 2, cur.i].forEach(function (k) { var im = new Image(); im.src = src(cur.slug, (k % cur.n) + 1); });
+    }
+
+    function open(slug, trigger) {
+      var r = ROOMS[slug]; if (!r) return;
+      var tmp = document.createElement('span'); tmp.innerHTML = r.name;
+      cur.slug = slug; cur.name = tmp.textContent; cur.n = r.photos;
+      $('rmType').textContent = r.type;
+      $('rmTitle').innerHTML = r.name;
+      $('rmLead').innerHTML = r.lead;
+      $('rmFacts').innerHTML =
+        '<li><b>до&nbsp;' + r.guests + '</b><span>гостей</span></li>' +
+        '<li><b>' + r.area + '</b><span>м²</span></li>' +
+        '<li><b>' + r.rooms + '</b><span>' + r.roomsWord + '</span></li>';
+      $('rmTags').innerHTML = r.tags.map(function (t) { return '<li><svg><use href="#i-check"/></svg>' + esc(t) + '</li>'; }).join('');
+      $('rmSpecs').innerHTML = r.specs.map(function (s) { return '<div><dt>' + s[0] + '</dt><dd>' + s[1] + '</dd></div>'; }).join('');
+      var note = $('rmNote');
+      note.hidden = !r.note; note.innerHTML = r.note || '';
+      var book = $('rmBook');
+      book.setAttribute('data-book', 'room:' + slug);
+      book.href = bookingUrl('room:' + slug);
+      var t = '';
+      for (var k = 1; k <= r.photos; k++) {
+        t += '<button type="button" data-rm-i="' + (k - 1) + '" aria-label="Фото ' + k + ' из ' + r.photos + '"><img src="' + src(slug, k, true) + '" alt="" loading="lazy"></button>';
+      }
+      thumbs.innerHTML = t;
+      openModal(m, trigger);
+      m.querySelector('.rm__info').scrollTop = 0; m.querySelector('.rm').scrollTop = 0;
+      show(r.cover - 1);
+    }
+
+    document.querySelectorAll('[data-room]').forEach(function (b) {
+      b.addEventListener('click', function () { open(b.getAttribute('data-room'), b); });
+    });
+    m.addEventListener('click', function (e) {
+      var nav = e.target.closest('[data-rm]');
+      if (nav) { show(cur.i + (nav.getAttribute('data-rm') === 'next' ? 1 : -1)); return; }
+      var th = e.target.closest('[data-rm-i]');
+      if (th) show(+th.getAttribute('data-rm-i'));
+    });
+    m.addEventListener('keydown', function (e) {
+      if (m.hidden || e.target.closest('.rm__info')) return;
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); show(cur.i + (e.key === 'ArrowRight' ? 1 : -1)); }
+    });
+    // свайп по фото на телефоне
+    var x0 = null, stage = photo.parentNode;
+    stage.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    stage.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 40) show(cur.i + (dx < 0 ? 1 : -1));
+    });
+  })();
 
   /* ===================== ПОМЕТКИ МАКЕТА ===================== */
   var nt = document.getElementById('notesToggle');
