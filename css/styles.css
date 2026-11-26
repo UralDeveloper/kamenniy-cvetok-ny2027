@@ -509,8 +509,8 @@ body.no-notes [data-note]{display:none!important}
 .room__count{position:absolute;left:14px;bottom:14px;padding:5px 11px;border-radius:999px;background:rgba(10,29,24,.72);color:#fff;font-size:13px;font-weight:600;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .room__desc{margin-top:10px;font-size:15px;line-height:1.5;color:var(--ink-2)}
 .room__meta{flex-wrap:wrap;gap:6px 16px;align-items:flex-end}
-.room__acts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.room__acts .btn{min-height:48px;padding:0 14px;font-size:15px}
+.room__acts{display:grid;grid-template-columns:auto 1fr;gap:10px}
+.room__acts .btn{min-height:48px;padding:0 16px;font-size:15px;white-space:nowrap}
 
 /* ---------- Окно номера ---------- */
 .modal--room{padding:24px}
@@ -610,3 +610,4 @@ body.no-notes [data-note]{display:none!important}
   .hero--banner .hero__actions{flex-direction:column}
 }
 @media (prefers-reduced-motion:reduce){.hero__poster img{animation:none}}
+.ftr__bottom .ftr__legal{flex-basis:100%;order:3;line-height:1.6}
