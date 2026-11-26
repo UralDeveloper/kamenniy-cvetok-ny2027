@@ -88,30 +88,39 @@
 <main>
 
 <!-- ============ 4.1 HERO ============ -->
-<section class="hero" id="top">
-  <div class="hero__bg" aria-hidden="true">
-    <img src="img/stock/hero-winter.jpg" alt="" fetchpriority="high">
-  </div>
+<section class="hero hero--banner" id="top">
   <canvas class="hero__snow" id="snow" aria-hidden="true"></canvas>
+  <figure class="hero__poster">
+    <picture>
+      <source media="(max-width:640px)" srcset="img/banner/ny-tall-900.webp" width="900" height="1285">
+      <source media="(max-width:900px)" srcset="img/banner/ny-mid-1400.webp" width="1400" height="900">
+      <img src="img/banner/ny-wide-1400.webp" srcset="img/banner/ny-wide-1400.webp 1400w, img/banner/ny-wide-2400.webp 2400w" sizes="(max-width:1440px) 100vw, 1392px" width="2400" height="845" alt="Новогоднее волшебство в Каменном цветке: семья гуляет у отеля зимним вечером" fetchpriority="high">
+    </picture>
+  </figure>
   <div class="wrap hero__in">
-    <p class="hero__dates"><svg><use href="#i-cal"/></svg>31 декабря 2026 — 2 января 2027</p>
-    <h1 class="hero__title">Новый год 2027<span>в Каменном цветке</span></h1>
-    <p class="hero__lead">Встретьте праздник среди гор, заснеженных пейзажей и праздничной атмосферы!</p>
-    <ul class="hero__chips">
-      <li><svg><use href="#i-bed"/></svg>Проживание</li>
-      <li><svg><use href="#i-cup"/></svg>Завтраки</li>
-      <li><svg><use href="#i-layers"/></svg>Два варианта тарифа</li>
-      <li><svg><use href="#i-glass"/></svg>Праздничная программа</li>
-      <li><svg><use href="#i-fire"/></svg>Гулянья 1 января</li>
-    </ul>
-    <div class="hero__actions">
-      <a class="btn btn--gold btn--lg" href="#tariffs" data-goal="ny_hero_choose">Выбрать тариф<svg><use href="#i-arrow"/></svg></a>
-      <a class="btn btn--glass btn--lg" data-book="any" data-goal="ny_book_hero" href="https://kamenniy-cvetok.ru/booking/">Забронировать отдых</a>
+    <div class="hero__text">
+      <p class="hero__dates"><svg><use href="#i-cal"/></svg>31 декабря 2026 — 2 января 2027</p>
+      <h1 class="hero__title">Новый год 2027 <span>в Каменном цветке</span></h1>
+      <p class="hero__lead">Встретьте праздник среди гор, заснеженных пейзажей и праздничной атмосферы!</p>
+      <ul class="hero__chips">
+        <li><svg><use href="#i-bed"/></svg>Проживание</li>
+        <li><svg><use href="#i-cup"/></svg>Завтраки</li>
+        <li><svg><use href="#i-layers"/></svg>Два варианта тарифа</li>
+        <li><svg><use href="#i-glass"/></svg>Праздничная программа</li>
+        <li><svg><use href="#i-fire"/></svg>Гулянья 1 января</li>
+      </ul>
     </div>
-    <a class="hero__promo" href="#early">
-      <b>−10%</b><span>на тариф с банкетом<br>при раннем бронировании</span><svg><use href="#i-arrow"/></svg>
-    </a>
+    <div class="hero__side">
+      <div class="hero__actions">
+        <a class="btn btn--gold btn--lg" href="#tariffs" data-goal="ny_hero_choose">Выбрать тариф<svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--glass btn--lg" data-book="any" data-goal="ny_book_hero" href="https://kamenniy-cvetok.ru/booking/">Забронировать отдых</a>
+      </div>
+      <a class="hero__promo" href="#early">
+        <b>−10%</b><span>на тариф с банкетом<br>при раннем бронировании</span><svg><use href="#i-arrow"/></svg>
+      </a>
+    </div>
   </div>
+  <p class="todo hero__note" data-note>Баннер — с&nbsp;Яндекс Диска «Новый год в&nbsp;Каменном цветке» (папка «сайт», версия без цен): широкий для компьютера, 5833×3750 для планшета, вертикальный для телефона.</p>
 </section>
 
 <!-- ============ 4.8 НОМЕРА ============ -->
@@ -237,7 +246,7 @@
     </div>
     <div class="mood">
       <figure class="mood__item mood__item--a reveal">
-        <img src="img/stock/nature-path.jpg" alt="Заснеженные ели вдоль лесной тропы" loading="lazy">
+        <img src="img/zav/nature-ridge.webp" alt="Закат над заснеженными хребтами у Завьялихи" loading="lazy">
         <figcaption><b>Зимняя природа</b>Хвойный лес, горы Южного Урала и&nbsp;снег, который скрипит под ногами</figcaption>
       </figure>
       <figure class="mood__item mood__item--b reveal">
@@ -245,11 +254,11 @@
         <figcaption><b>Уютное проживание</b>Светлые номера с&nbsp;кухней — для пары, семьи или большой компании</figcaption>
       </figure>
       <figure class="mood__item mood__item--c reveal">
-        <img src="img/stock/ski-slope.jpg" alt="Горнолыжный склон с катающимися" loading="lazy">
+        <img src="img/zav/family-ski.webp" alt="Семья на лыжах на склоне Завьялихи" loading="lazy">
         <figcaption><b>Катание</b>Горные лыжи и&nbsp;сноуборд на склонах Завьялихи</figcaption>
       </figure>
       <figure class="mood__item mood__item--d reveal">
-        <img src="img/stock/evening-tree.jpg" alt="Новогодняя ель в огнях зимним вечером" loading="lazy">
+        <img src="img/zav/evening-lights.webp" alt="Огни Завьялихи зимним вечером" loading="lazy">
         <figcaption><b>Праздничный вечер</b>Огни, музыка и&nbsp;прогулки на свежем воздухе</figcaption>
       </figure>
     </div>
@@ -403,7 +412,7 @@
 
 <!-- ============ 4.6 1 ЯНВАРЯ ============ -->
 <section class="jan1" id="jan1">
-  <div class="jan1__bg" aria-hidden="true"><img src="img/stock/fest-folk.jpg" alt="" loading="lazy"></div>
+  <div class="jan1__bg" aria-hidden="true"><img src="img/zav/fest-stage.webp" alt="" loading="lazy"></div>
   <div class="wrap jan1__in">
     <div class="jan1__text reveal">
       <p class="jan1__date"><span>1</span>января<br>2027</p>
@@ -413,7 +422,7 @@
     </div>
     <div class="jan1__cards">
       <figure class="reveal"><img src="img/stock/uha-fire.jpg" alt="Котелок с ухой над костром" loading="lazy"><figcaption>Уха на&nbsp;костре</figcaption></figure>
-      <figure class="reveal"><img src="img/stock/uha-cauldrons.jpg" alt="Котлы на открытом огне" loading="lazy"><figcaption>Горячее угощение</figcaption></figure>
+      <figure class="reveal"><img src="img/zav/fest-kids.webp" alt="Дети с ростовыми куклами на празднике в Завьялихе" loading="lazy"><figcaption>Зимние забавы для детей</figcaption></figure>
     </div>
   </div>
 </section>
@@ -598,8 +607,8 @@
     <button class="modal__close" type="button" data-close aria-label="Закрыть"><svg><use href="#i-close"/></svg></button>
     <div class="rm__gallery">
       <div class="rm__stage">
-        <img class="rm__bg" id="rmBg" src="" alt="" aria-hidden="true">
-        <img class="rm__photo" id="rmPhoto" src="" alt="">
+        <img class="rm__bg" id="rmBg" alt="" aria-hidden="true">
+        <img class="rm__photo" id="rmPhoto" alt="">
         <button class="rm__nav rm__nav--prev" type="button" data-rm="prev" aria-label="Предыдущее фото"><svg><use href="#i-left"/></svg></button>
         <button class="rm__nav rm__nav--next" type="button" data-rm="next" aria-label="Следующее фото"><svg><use href="#i-right"/></svg></button>
         <span class="rm__count" id="rmCount" aria-live="polite"></span>

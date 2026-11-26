@@ -578,3 +578,35 @@ body.no-notes [data-note]{display:none!important}
   .rm__cta .btn{width:100%}
 
 }
+
+/* ---------- Первый экран: баннер с Яндекс Диска ---------- */
+.hero--banner{min-height:0;display:block;padding-top:calc(var(--hdr) + 12px);background:radial-gradient(90% 60% at 70% 0%,#2a2f5a 0%,transparent 70%),linear-gradient(180deg,var(--night-900) 0%,var(--pine-950) 100%)}
+.hero--banner .hero__snow{z-index:2}
+.hero__poster{position:relative;z-index:1;margin:0 auto;width:min(1392px,calc(100% - 48px));border-radius:var(--r-xl);overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.8);background:var(--night-800)}
+.hero__poster img{display:block;width:100%;height:auto;animation:heroPoster 1.2s var(--ease) both}
+@keyframes heroPoster{from{opacity:0;transform:scale(1.03)}to{opacity:1;transform:none}}
+.hero--banner .hero__in{z-index:3;max-width:1440px;padding-left:48px;padding-right:48px;display:grid;grid-template-columns:minmax(0,1fr) 340px;align-items:end;gap:24px 48px;padding-top:30px;padding-bottom:36px}
+.hero--banner .hero__dates{font-size:13px;padding:7px 13px}
+.hero--banner .hero__title{font-size:clamp(38px,4.2vw,60px);line-height:1;margin-top:14px}
+.hero--banner .hero__title span{display:inline;font-size:1em}
+.hero--banner .hero__lead{font-size:17px;margin-top:10px;max-width:none}
+.hero--banner .hero__chips{margin-top:16px;max-width:none}
+.hero--banner .hero__chips li{font-size:14px;padding:6px 12px 6px 10px}
+.hero__side{display:flex;flex-direction:column;align-items:stretch;gap:14px}
+.hero--banner .hero__actions{margin-top:0;flex-direction:column;gap:10px}
+.hero--banner .hero__promo{position:static;padding:12px 18px 12px 16px}
+.hero--banner .hero__promo b{font-size:40px}
+.hero__note{position:relative;z-index:3;display:block;width:fit-content;max-width:calc(100% - 48px);margin:0 auto 24px}
+@media (max-width:1024px){
+  .hero--banner .hero__in{grid-template-columns:1fr;padding-left:24px;padding-right:24px}
+  .hero__side{flex-direction:row;flex-wrap:wrap;align-items:center}
+  .hero--banner .hero__actions{flex-direction:row}
+}
+@media (max-width:640px){
+  .hero--banner{padding-top:calc(var(--hdr) + 8px)}
+  .hero__poster{width:calc(100% - 24px);border-radius:var(--r-lg)}
+  .hero--banner .hero__in{padding:24px 18px 32px}
+  .hero__side{flex-direction:column;align-items:stretch}
+  .hero--banner .hero__actions{flex-direction:column}
+}
+@media (prefers-reduced-motion:reduce){.hero__poster img{animation:none}}
