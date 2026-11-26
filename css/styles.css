@@ -501,3 +501,80 @@ body.no-notes [data-note]{display:none!important}
   .ftr{padding-bottom:110px}
   .notes-toggle{bottom:auto;top:calc(var(--hdr) + 10px);left:auto;right:12px}
 }
+
+/* ---------- 4.8 Номера: карточки (данные TravelLine) ---------- */
+.room__media{position:relative;display:block;width:100%;padding:0;border:0;background:var(--pine-800);cursor:zoom-in;overflow:hidden}
+.room__media img{display:block;transition:transform .6s var(--ease)}
+.room__media:hover img{transform:scale(1.04)}
+.room__count{position:absolute;left:14px;bottom:14px;padding:5px 11px;border-radius:999px;background:rgba(10,29,24,.72);color:#fff;font-size:13px;font-weight:600;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.room__desc{margin-top:10px;font-size:15px;line-height:1.5;color:var(--ink-2)}
+.room__meta{flex-wrap:wrap;gap:6px 16px;align-items:flex-end}
+.room__acts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.room__acts .btn{min-height:48px;padding:0 14px;font-size:15px}
+
+/* ---------- Окно номера ---------- */
+.modal--room{padding:24px}
+.rm{display:grid;width:100%;max-width:1160px;max-height:none;padding:0;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);height:min(800px,calc(100dvh - 48px));overflow:hidden;border-radius:var(--r-xl)}
+.rm .modal__close{z-index:3;background:var(--paper);box-shadow:0 2px 10px rgba(15,42,36,.2)}
+.rm__gallery{--gr:calc(var(--r-xl) - 10px);padding:10px 0 10px 10px;display:flex;flex-direction:column;gap:8px;min-height:0}
+.rm__stage{position:relative;flex:1;min-height:0;overflow:hidden;isolation:isolate;background:var(--pine-950);border-radius:var(--gr) var(--gr) 10px 10px}
+.rm__bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(24px) brightness(.55) saturate(.7);transform:scale(1.2)}
+.rm__photo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.rm__nav,.rm__count{z-index:1}
+.rm__nav{position:absolute;top:50%;translate:0 -50%;width:48px;height:48px;border-radius:50%;border:0;background:var(--paper);color:var(--pine-900);display:grid;place-items:center;box-shadow:0 6px 18px -6px rgba(0,0,0,.5);transition:background-color .2s,color .2s}
+.rm__nav svg{width:22px;height:22px}
+.rm__nav:hover{background:var(--gold);color:var(--pine-950)}
+.rm__nav--prev{left:16px}.rm__nav--next{right:16px}
+.rm__count{position:absolute;left:16px;bottom:16px;background:rgba(10,29,24,.78);color:#fff;font-weight:600;font-size:14px;padding:6px 12px;border-radius:999px}
+.rm__thumbs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--pine-600) transparent;padding-bottom:2px;flex:none}
+.rm__thumbs::-webkit-scrollbar{height:6px}
+.rm__thumbs::-webkit-scrollbar-thumb{background:var(--pine-600);border-radius:9px}
+.rm__thumbs button{position:relative;flex:0 0 96px;aspect-ratio:3/2;padding:0;border:0;border-radius:10px;overflow:hidden;opacity:.55;background:var(--line);transition:opacity .2s}
+.rm__thumbs button:first-child{border-bottom-left-radius:var(--gr)}
+.rm__thumbs button:hover{opacity:.85}
+.rm__thumbs button::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 3px transparent;transition:box-shadow .2s}
+.rm__thumbs button[aria-current]{opacity:1}
+.rm__thumbs button[aria-current]::after{box-shadow:inset 0 0 0 3px var(--gold)}
+.rm__thumbs img{width:100%;height:100%;object-fit:cover}
+.rm__info{padding:40px 40px 30px;overflow-y:auto;min-height:0;display:flex;flex-direction:column;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--pine-600) transparent}
+.rm__info .eyebrow{margin-bottom:10px;padding-right:48px}
+.rm__title{font-family:var(--f-display);font-weight:600;font-size:clamp(32px,3vw,44px);line-height:1.02;color:var(--pine-900)}
+.rm__lead{margin-top:14px;font-size:17px;color:var(--ink-2)}
+.rm__facts{list-style:none;margin:22px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.rm__facts li{padding:14px 0 12px;display:flex;flex-direction:column;gap:2px}
+.rm__facts li+li{border-left:1px solid var(--line);padding-left:18px}
+.rm__facts b{font-family:var(--f-display);font-weight:600;font-size:clamp(30px,2.8vw,40px);line-height:1;color:var(--gold-ink)}
+.rm__facts span{font-size:14px;font-weight:600;color:var(--ink-2)}
+.rm__tags{list-style:none;margin:18px 0 6px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.rm__tags li{display:inline-flex;align-items:center;gap:6px;padding:6px 12px 6px 9px;border-radius:999px;background:var(--snow);border:1px solid var(--line-2);font-size:14px;font-weight:500;color:var(--pine-900)}
+.rm__tags svg{width:15px;height:15px;color:var(--pine-600)}
+.rm__specs{display:grid;margin:0}
+.rm__specs div{display:grid;grid-template-columns:128px minmax(0,1fr);gap:16px;padding:13px 0;border-bottom:1px solid var(--line-2)}
+.rm__specs dt{font-weight:600;font-size:15px;color:var(--pine-900)}
+.rm__specs dd{margin:0;font-size:15px;color:var(--ink-2);line-height:1.5}
+.rm .todo--block[hidden]{display:none}
+.rm__cta{margin-top:auto;padding-top:24px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px}
+.rm__cta .btn{margin-top:0}
+.rm__tour{margin:0!important;font-size:14px;color:var(--ink-3);flex:1 1 200px}
+@media (max-width:1024px){
+  .rm{display:block;height:auto;max-height:calc(100dvh - 48px);overflow-y:auto;max-width:760px;overscroll-behavior:contain}
+  .rm__stage{flex:none;aspect-ratio:3/2}
+  .rm__gallery{padding:10px 10px 0}
+  .rm__thumbs button:first-child{border-bottom-left-radius:10px}
+  .rm__info{overflow:visible}
+}
+@media (max-width:640px){
+  .modal--room{padding:0;place-items:end center}
+  .rm{max-height:100dvh;height:100dvh;border-radius:0}
+  .rm__gallery{padding:0}
+  .rm__stage{border-radius:0;aspect-ratio:4/3}
+  .rm__thumbs{padding:0 10px}
+  .rm__thumbs button{flex-basis:76px}
+  .rm__nav{width:42px;height:42px}
+  .rm__nav--prev{left:10px}.rm__nav--next{right:10px}
+  .rm .modal__close{position:fixed;top:10px;right:10px}
+  .rm__info{padding:22px 18px 28px}
+  .rm__specs div{grid-template-columns:1fr;gap:4px}
+  .rm__cta .btn{width:100%}
+
+}
